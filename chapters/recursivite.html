@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La récursivité — AlgoTN</title>
+<meta name="description" content="Comprendre la récursivité : cas de base, appel récursif, pile d'appels animée, récursif vs itératif, pièges et exercices type examen.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%238b5cf6'/><text x='50' y='72' font-size='58' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold'>∞</text></svg>">
+<link rel="stylesheet" href="../css/theme.css">
+<link rel="stylesheet" href="../css/main.css">
+</head>
+<body data-chapter="recursivite">
+<div class="readbar"></div>
+
+<header class="topbar">
+  <div class="topbar__inner">
+    <button class="iconbtn menu-toggle" title="Menu">☰</button>
+    <a class="brand" href="../index.html"><span class="brand__logo">A</span><span>AlgoTN <small>Algorithmique · TI</small></span></a>
+    <nav>
+      <a href="../index.html">Accueil</a>
+      <a href="../index.html#chapitres" class="active">Chapitres</a>
+      <a href="../pages/revision.html">Révision</a>
+      <a href="../pages/exercices.html">Exercices</a>
+    </nav>
+    <span class="topbar__spacer"></span>
+    <button class="iconbtn" data-search-open title="Rechercher (Ctrl+K)">🔍</button>
+    <button class="iconbtn" data-theme-toggle title="Thème"><span data-theme-icon>🌙</span></button>
+  </div>
+</header>
+
+<div class="layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <h4>Chapitres</h4>
+    <nav id="chap-nav"></nav>
+    <h4>Dans ce chapitre</h4>
+    <nav class="toc" id="toc"></nav>
+    <button class="btn btn--soft btn--sm" id="fav-btn" style="margin-top:14px;width:100%">☆ Mettre en favori</button>
+  </aside>
+
+  <!-- ARTICLE -->
+  <article class="article">
+    <div class="crumbs"><a href="../index.html">Accueil</a> › <a href="../index.html#chapitres">Chapitres</a> › <span>Récursivité</span></div>
+    <span class="lead-chip" style="margin-top:14px">⭐ Chapitre clé d'examen · ∞ Récursivité</span>
+    <h1 style="margin-top:12px">La récursivité, sans la migraine</h1>
+    <p class="lead muted">Une fonction qui s'appelle elle-même. Ça sonne magique (ou inquiétant). En réalité c'est juste une façon élégante de dire : « pour résoudre un gros problème, résous une version un peu plus petite, et arrête-toi quand c'est vraiment minuscule ».</p>
+
+    <!-- 1. Intuition -->
+    <h2 id="intuition"><span class="num">1</span> L'intuition d'abord</h2>
+    <p>Imagine une pile d'assiettes à laver. Tu te dis : « je lave celle du dessus, puis je m'occupe du <b>reste de la pile</b>… qui est exactement le même problème, mais avec une assiette de moins. » Tu t'arrêtes quand il n'y a plus d'assiette.</p>
+    <p>C'est <b>ça</b>, la récursivité : un problème qui se définit en fonction de lui-même, en plus petit, avec une condition d'arrêt.</p>
+
+    <div class="note note--analogy"><span class="note__ic">🪆</span><div class="note__body">
+      <strong>Analogie : les poupées russes</strong>
+      Ouvrir une poupée russe, c'est « ouvrir la poupée extérieure, puis ouvrir celle qu'il y a dedans ». La règle est la même à chaque étage, jusqu'à la plus petite poupée qu'on ne peut plus ouvrir : c'est le <b>cas de base</b>.
+    </div></div>
+
+    <div class="note note--why"><span class="note__ic">🤔</span><div class="note__body">
+      <strong>Pourquoi ça existe ?</strong>
+      Certains problèmes sont <b>naturellement</b> récursifs : parcourir un arbre, une liste chaînée, calculer une factorielle, explorer un labyrinthe. Les écrire récursivement donne un code court, lisible et proche de la définition mathématique.
+    </div></div>
+
+    <!-- 2. Les deux ingrédients -->
+    <h2 id="ingredients"><span class="num">2</span> Les 2 ingrédients obligatoires</h2>
+    <p>Toute fonction récursive correcte contient <b>exactement</b> ces deux parties. Si l'une manque, ça casse.</p>
+    <ol>
+      <li><b>Le cas de base</b> — la situation la plus simple, qu'on sait résoudre <b>sans</b> se rappeler soi-même. C'est le frein. <span class="muted">Ex : factorielle(0) = 1.</span></li>
+      <li><b>Le cas récursif</b> — on se rappelle soi-même sur un problème <b>strictement plus petit</b>, qui se rapproche du cas de base. <span class="muted">Ex : factorielle(n) = n × factorielle(n−1).</span></li>
+    </ol>
+
+    <div class="note note--warn"><span class="note__ic">⚠️</span><div class="note__body">
+      <strong>Le piège n°1 : oublier (ou rater) le cas de base</strong>
+      Sans cas de base — ou si l'appel récursif ne se rapproche jamais de lui — la fonction s'appelle à l'infini. La pile d'appels explose : <i>débordement de pile (stack overflow)</i>. C'est l'équivalent récursif de la boucle infinie.
+    </div></div>
+
+    <!-- 3. Exemple factorielle ligne par ligne -->
+    <h2 id="factorielle"><span class="num">3</span> Décortiquons : la factorielle</h2>
+    <p>Rappel maths : <code>n! = n × (n−1) × … × 2 × 1</code>, et <code>0! = 1</code>. Voici la version récursive en pseudo-code TI :</p>
+
+    <div class="code">
+      <div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">factorielle.algo</span><button class="code__copy">Copier</button></div>
+      <pre><code data-raw="Fonction factorielle(n : entier) : entier
+Début
+    Si (n <= 1) Alors          // cas de base
+        Retourner 1
+    Sinon                      // cas récursif
+        Retourner n * factorielle(n - 1)
+    FinSi
+FinFonction"></code></pre>
+    </div>
+
+    <p>Maintenant, l'explication <b>ligne par ligne</b> — c'est là que tout devient clair :</p>
+    <div class="lines">
+      <div class="lines__row"><div class="lines__code">Fonction factorielle(n : entier) : entier</div><div class="lines__exp">On déclare une fonction qui reçoit un entier <b>n</b> et qui <b>renvoie</b> un entier (le résultat de n!).</div></div>
+      <div class="lines__row"><div class="lines__code">Si (n <= 1) Alors Retourner 1</div><div class="lines__exp"><b>Cas de base.</b> Si n vaut 0 ou 1, on connaît la réponse directement : 1. On s'arrête, sans rappel.</div></div>
+      <div class="lines__row"><div class="lines__code">Sinon Retourner n * factorielle(n - 1)</div><div class="lines__exp"><b>Cas récursif.</b> On ne sait pas calculer n! tout seul, mais on sait que c'est <b>n ×</b> le résultat d'un problème <b>plus petit</b> : (n−1)!. On délègue ce sous-calcul à… nous-mêmes.</div></div>
+    </div>
+
+    <div class="note note--intui"><span class="note__ic">🎬</span><div class="note__body">
+      <strong>La descente puis la remontée</strong>
+      factorielle(4) attend factorielle(3), qui attend factorielle(2), qui attend factorielle(1) = 1 (stop !). Puis tout <b>remonte</b> : 2×1=2, 3×2=6, 4×6=24. La récursivité, c'est une descente (on empile) suivie d'une remontée (on dépile et on calcule).
+    </div></div>
+
+    <!-- VISUALISEUR -->
+    <h2 id="visualiseur"><span class="num">4</span> Visualiseur : la pile d'appels en direct</h2>
+    <p>Lance l'animation ci-dessous. Regarde les appels <b>s'empiler</b> pendant la descente, puis <b>se dépiler</b> en renvoyant leur résultat pendant la remontée. Essaie aussi Fibonacci (tu verras pourquoi il est lent !) et le PGCD.</p>
+    <div data-viz-recursion></div>
+
+    <!-- 5. Fibonacci -->
+    <h2 id="fibonacci"><span class="num">5</span> Fibonacci : élégant mais piégeux</h2>
+    <p>La suite de Fibonacci : <code>fib(0)=0</code>, <code>fib(1)=1</code>, et <code>fib(n)=fib(n−1)+fib(n−2)</code>. Deux cas de base, deux appels récursifs.</p>
+    <div class="code">
+      <div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">fibonacci.algo</span><button class="code__copy">Copier</button></div>
+      <pre><code data-raw="Fonction fib(n : entier) : entier
+Début
+    Si (n < 2) Alors
+        Retourner n              // fib(0)=0, fib(1)=1
+    Sinon
+        Retourner fib(n-1) + fib(n-2)
+    FinSi
+FinFonction"></code></pre>
+    </div>
+    <div class="note note--warn"><span class="note__ic">🐌</span><div class="note__body">
+      <strong>Pourquoi Fibonacci récursif est lent</strong>
+      fib(5) recalcule fib(3) deux fois, fib(2) trois fois… On refait des milliers de fois le même calcul. La complexité est <b>exponentielle</b> O(2ⁿ). Lance le visualiseur sur fib(6) : compte le nombre d'appels ! En examen, sache <b>l'écrire</b> ; en pratique, on préfère la version itérative.
+    </div></div>
+
+    <!-- 6. Récursif vs itératif -->
+    <h2 id="vs-iteratif"><span class="num">6</span> Récursif vs itératif</h2>
+    <p>Tout ce qui se fait en récursif se fait aussi avec une boucle (et inversement). Lequel choisir ? Voici une comparaison honnête.</p>
+    <table class="cmp">
+      <tr><th></th><th>Récursif</th><th>Itératif (boucle)</th></tr>
+      <tr><td>Lisibilité</td><td>Très proche de la définition maths, souvent plus court</td><td>Plus « mécanique », parfois plus verbeux</td></tr>
+      <tr><td>Mémoire</td><td>Consomme la pile d'appels (1 cadre par appel)</td><td>Mémoire constante en général</td></tr>
+      <tr><td>Vitesse</td><td>Surcoût des appels ; risque de recalculs (Fibonacci)</td><td>En général plus rapide</td></tr>
+      <tr><td>Risque</td><td>Débordement de pile si trop d'appels</td><td>Boucle infinie si condition mal écrite</td></tr>
+      <tr><td>Idéal pour</td><td>Arbres, listes chaînées, « diviser pour régner »</td><td>Parcours simples, compteurs, accumulations</td></tr>
+    </table>
+    <div class="code">
+      <div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">factorielle_iteratif.algo</span><button class="code__copy">Copier</button></div>
+      <pre><code data-raw="Fonction factorielle_iter(n : entier) : entier
+Var i, r : entier
+Début
+    r <- 1
+    Pour i De 2 À n Faire
+        r <- r * i
+    FinPour
+    Retourner r
+FinFonction"></code></pre>
+    </div>
+
+    <!-- 7. Erreurs fréquentes -->
+    <h2 id="erreurs"><span class="num">7</span> Erreurs fréquentes (à connaître pour l'examen)</h2>
+    <ul>
+      <li><b>Pas de cas de base</b> → récursion infinie → débordement de pile.</li>
+      <li><b>L'appel ne « rapetisse » pas le problème</b> (ex : <code>factorielle(n)</code> qui appelle <code>factorielle(n)</code>) → jamais d'arrêt.</li>
+      <li><b>Oublier de renvoyer (Retourner) le résultat de l'appel récursif</b> → la fonction calcule mais ne remonte rien.</li>
+      <li><b>Confondre « afficher » et « renvoyer »</b> : une fonction qui doit retourner une valeur ne doit pas se contenter d'un Ecrire.</li>
+      <li><b>Mauvais ordre des opérations à la remontée</b> (surtout pour inverser/afficher à l'envers).</li>
+    </ul>
+
+    <div class="note note--exam"><span class="note__ic">🎯</span><div class="note__body">
+      <strong>Astuces de correcteur</strong>
+      ① Commence <b>toujours</b> par écrire le cas de base. ② Écris ensuite l'appel récursif en supposant qu'il « marche déjà » pour n−1 (hypothèse de récurrence). ③ Pour dérouler à la main : empile les appels jusqu'au cas de base, <b>puis</b> remonte. ④ Mentionne la complexité si on te la demande (factorielle : O(n) ; Fibonacci naïf : O(2ⁿ)).
+    </div></div>
+
+    <!-- 8. Exercices -->
+    <h2 id="exercices"><span class="num">8</span> Exercices guidés &amp; corrigés</h2>
+    <p>Tirés du programme TI (devoirs et examens). Réfléchis <b>avant</b> d'ouvrir la correction.</p>
+
+    <!-- Exo 1 : nb_chiff -->
+    <div class="exo">
+      <div class="exo__head"><span class="pill pill--moyen">Moyen</span><span class="pill pill--examen">Type examen</span><h4>Nombre de chiffres d'un entier</h4></div>
+      <p class="exo__statement">Écris une fonction récursive <code>nb_chiff(n)</code> qui renvoie le nombre de chiffres d'un entier positif. Ex : <code>nb_chiff(9)=1</code>, <code>nb_chiff(456789)=6</code>.</p>
+      <button class="btn btn--soft btn--sm exo__toggle" data-exo-toggle>▼ Voir la correction détaillée</button>
+      <div class="exo__sol">
+        <div class="exo__step"><b>Réflexion.</b> Un nombre &lt; 10 a 1 seul chiffre (cas de base). Sinon, il a « 1 chiffre de plus que le même nombre privé de son dernier chiffre », c.-à-d. <code>n div 10</code>.</div>
+        <div class="exo__step"><b>Cas de base :</b> si <code>n < 10</code> → 1 chiffre.</div>
+        <div class="exo__step"><b>Cas récursif :</b> <code>1 + nb_chiff(n div 10)</code>.</div>
+        <div class="code">
+          <div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">nb_chiff.algo</span><button class="code__copy">Copier</button></div>
+          <pre><code data-raw="Fonction nb_chiff(n : entier) : entier
+Début
+    Si (n < 10) Alors
+        Retourner 1
+    Sinon
+        Retourner 1 + nb_chiff(n div 10)
+    FinSi
+FinFonction"></code></pre>
+        </div>
+        <div class="exo__step"><b>Déroulé de nb_chiff(456) :</b> 1 + nb_chiff(45) → 1 + (1 + nb_chiff(4)) → 1 + 1 + 1 = <b>3</b>. ✅</div>
+      </div>
+    </div>
+
+    <!-- Exo 2 : somme -->
+    <div class="exo">
+      <div class="exo__head"><span class="pill pill--facile">Facile</span><h4>Somme des entiers de 1 à n</h4></div>
+      <p class="exo__statement">Écris <code>somme(n)</code> récursive qui calcule 1 + 2 + … + n.</p>
+      <button class="btn btn--soft btn--sm exo__toggle" data-exo-toggle>▼ Voir la correction détaillée</button>
+      <div class="exo__sol">
+        <div class="exo__step"><b>Idée.</b> somme(n) = n + somme(n−1), et somme(0) = 0.</div>
+        <div class="code"><div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">somme.algo</span><button class="code__copy">Copier</button></div>
+          <pre><code data-raw="Fonction somme(n : entier) : entier
+Début
+    Si (n = 0) Alors
+        Retourner 0
+    Sinon
+        Retourner n + somme(n - 1)
+    FinSi
+FinFonction"></code></pre></div>
+        <div class="exo__step"><b>Astuce :</b> formule fermée n(n+1)/2 pour vérifier ton résultat (somme(4)=10).</div>
+      </div>
+    </div>
+
+    <!-- Exo 3 : longueur liste -->
+    <div class="exo">
+      <div class="exo__head"><span class="pill pill--moyen">Moyen</span><span class="pill pill--examen">Type examen (TD4)</span><h4>Longueur récursive d'une liste chaînée</h4></div>
+      <p class="exo__statement">Écris une fonction récursive <code>Longueur(L : Liste) : entier</code> qui renvoie le nombre d'éléments d'une liste chaînée.</p>
+      <button class="btn btn--soft btn--sm exo__toggle" data-exo-toggle>▼ Voir la correction détaillée</button>
+      <div class="exo__sol">
+        <div class="exo__step"><b>Idée.</b> Une liste vide (L = Nil) a une longueur de 0 (cas de base). Sinon, sa longueur = 1 + longueur du reste (<code>L^.suivant</code>).</div>
+        <div class="code"><div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">longueur.algo</span><button class="code__copy">Copier</button></div>
+          <pre><code data-raw="Fonction Longueur(L : Liste) : entier
+Début
+    Si (L = Nil) Alors
+        Retourner 0
+    Sinon
+        Retourner 1 + Longueur(L^.suivant)
+    FinSi
+FinFonction"></code></pre></div>
+        <div class="exo__step"><b>Le motif clé :</b> sur une liste, le cas de base est presque toujours <code>L = Nil</code>, et l'appel récursif porte sur <code>L^.suivant</code>. Retiens-le, il revient à chaque exercice de liste !</div>
+      </div>
+    </div>
+
+    <!-- Exo 4 : colis le plus lourd -->
+    <div class="exo">
+      <div class="exo__head"><span class="pill pill--difficile">Difficile</span><span class="pill pill--examen">Examen 2025</span><h4>Le colis le plus lourd (liste)</h4></div>
+      <p class="exo__statement">Une liste de colis (chaque nœud a un poids). Écris une fonction <b>récursive</b> qui renvoie le poids du colis le plus lourd.</p>
+      <button class="btn btn--soft btn--sm exo__toggle" data-exo-toggle>▼ Voir la correction détaillée</button>
+      <div class="exo__sol">
+        <div class="exo__step"><b>Idée.</b> Le max de la liste = le plus grand entre le poids du <b>1ᵉʳ</b> colis et le max du <b>reste</b>. Cas de base : un seul élément → c'est lui le max.</div>
+        <div class="code"><div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">max_poids.algo</span><button class="code__copy">Copier</button></div>
+          <pre><code data-raw="Fonction MaxPoids(L : Liste) : reel
+Var m : reel
+Début
+    Si (L^.suivant = Nil) Alors      // un seul colis restant
+        Retourner L^.poids
+    Sinon
+        m <- MaxPoids(L^.suivant)    // max du reste
+        Si (L^.poids > m) Alors
+            Retourner L^.poids
+        Sinon
+            Retourner m
+        FinSi
+    FinSi
+FinFonction"></code></pre></div>
+        <div class="exo__step"><b>Hypothèse de récurrence :</b> on suppose que <code>MaxPoids(L^.suivant)</code> donne déjà le bon max du reste — il ne reste qu'à le comparer au premier. C'est toute la beauté de la méthode.</div>
+      </div>
+    </div>
+
+    <!-- QCM -->
+    <h2 id="qcm"><span class="num">9</span> QCM — teste-toi (mode examen dispo)</h2>
+    <p>25 questions, du cours aux pièges. <b>Mode libre</b> : correction immédiate. <b>Mode examen</b> : minuteur de 10 min, score à la fin.</p>
+    <div class="quiz" data-quiz="recursivite" data-time="600"></div>
+
+    <!-- mini résumé -->
+    <h2 id="resume"><span class="num">10</span> Mini-résumé à retenir</h2>
+    <div class="card" style="background:var(--surface-2)">
+      <ul style="margin-top:0">
+        <li>Récursivité = <b>cas de base</b> (arrêt) + <b>cas récursif</b> (problème plus petit).</li>
+        <li>Descente = on empile les appels ; remontée = on dépile et on combine les résultats.</li>
+        <li>Sur une liste : base = <code>L = Nil</code>, appel sur <code>L^.suivant</code>.</li>
+        <li>Pas de cas de base ⟹ débordement de pile.</li>
+        <li>factorielle : O(n) · Fibonacci naïf : O(2ⁿ) (lent, recalculs).</li>
+      </ul>
+    </div>
+
+    <div id="prevnext" style="display:flex;gap:14px;margin-top:34px;flex-wrap:wrap"></div>
+  </article>
+</div>
+
+<footer class="footer"><div class="footer__inner">
+  <div><b class="grad-text">AlgoTN</b> — Programme Algorithmique & Structures de Données, TI.</div>
+  <div>100% hors-ligne · Ta progression reste sur ton appareil.</div>
+</div></footer>
+
+<button class="iconbtn totop" title="Haut de page">↑</button>
+<div class="search-modal"><div class="search-box"><input type="text" placeholder="Rechercher un chapitre… (Échap pour fermer)"><div class="search-results"></div></div></div>
+
+<!-- Banque de QCM de ce chapitre -->
+<script>
+window.ALGOTN_QUIZ = [
+  { q:"Quels sont les DEUX ingrédients obligatoires d'une fonction récursive ?", options:["Une boucle et un compteur","Un cas de base et un cas récursif","Deux cas de base","Un tableau et un indice"], answer:1, exp:"Le cas de base arrête la récursion ; le cas récursif rappelle la fonction sur un problème plus petit." },
+  { q:"Que se passe-t-il si on oublie le cas de base ?", options:["Le programme renvoie 0","La fonction s'appelle à l'infini → débordement de pile","Rien, c'est optionnel","La fonction devient itérative"], answer:1, exp:"Sans condition d'arrêt, les appels s'empilent sans fin : stack overflow." },
+  { q:"Pour factorielle, quel est le cas de base usuel ?", options:["n = 100","n <= 1 → 1","n > 0","n est pair"], answer:1, exp:"0! = 1! = 1 ; on s'arrête dès que n vaut 0 ou 1." },
+  { q:"factorielle(4) vaut :", options:["12","16","24","10"], answer:2, exp:"4×3×2×1 = 24." },
+  { q:"Dans 'Retourner n * factorielle(n-1)', l'appel porte sur :", options:["n","n+1","n-1 (problème plus petit)","0"], answer:2, exp:"On se rapproche du cas de base en diminuant n." },
+  { q:"La récursivité procède en deux temps :", options:["Tri puis recherche","Descente (empile) puis remontée (dépile)","Lecture puis écriture","Boucle puis condition"], answer:1, exp:"On empile jusqu'au cas de base, puis on remonte en combinant les résultats." },
+  { q:"La complexité de fibonacci récursif naïf est :", options:["O(1)","O(n)","O(log n)","O(2ⁿ) exponentielle"], answer:3, exp:"À cause des recalculs répétés des mêmes valeurs." },
+  { q:"fib(6) vaut (fib(0)=0, fib(1)=1) :", options:["5","8","13","6"], answer:1, exp:"0,1,1,2,3,5,8 → fib(6)=8." },
+  { q:"Sur une liste chaînée, le cas de base typique est :", options:["L = 0","L = Nil (liste vide)","L^.poids = 0","L > 10"], answer:1, exp:"Une liste vide (Nil) est le plus petit cas." },
+  { q:"Sur une liste, l'appel récursif porte généralement sur :", options:["L lui-même","L^.suivant (le reste)","la tête","un tableau"], answer:1, exp:"On traite le 1er élément puis on délègue le reste à L^.suivant." },
+  { q:"Une fonction récursive qui s'appelle avec le MÊME argument (n→n) :", options:["Est correcte","Ne se termine jamais","Devient itérative","Renvoie 1"], answer:1, exp:"Le problème ne rapetisse pas : récursion infinie." },
+  { q:"Différence clé entre 'Retourner' et 'Ecrire' dans une fonction :", options:["Aucune","Retourner renvoie une valeur exploitable ; Ecrire ne fait qu'afficher","Ecrire est plus rapide","Retourner affiche à l'écran"], answer:1, exp:"Une fonction qui doit produire un résultat doit le Retourner, pas seulement l'afficher." },
+  { q:"nb_chiff(456789) renvoie :", options:["5","6","7","9"], answer:1, exp:"456789 a 6 chiffres ; chaque div 10 enlève un chiffre." },
+  { q:"Quel cas de base pour nb_chiff ?", options:["n = 0","n < 10 → 1","n > 100","n pair"], answer:1, exp:"Un nombre à un seul chiffre (< 10) en a exactement 1." },
+  { q:"La récursivité consomme principalement :", options:["Le disque dur","La pile d'appels (call stack)","Le réseau","La carte graphique"], answer:1, exp:"Chaque appel en attente occupe un cadre dans la pile." },
+  { q:"somme(n) = ? (récursif)", options:["n + somme(n+1)","n + somme(n-1), somme(0)=0","somme(n-1) seulement","n * somme(n-1)"], answer:1, exp:"On ajoute n au résultat de la somme jusqu'à n-1." },
+  { q:"Quel problème est le plus naturellement récursif ?", options:["Incrémenter un compteur","Parcourir une liste chaînée / un arbre","Lire une variable","Afficher un message"], answer:1, exp:"Les structures auto-similaires (listes, arbres) sont idéales pour la récursion." },
+  { q:"À la remontée de factorielle(3), on calcule :", options:["3 + 2 + 1","3 × factorielle(2) = 3 × 2 = 6","3 - 1","factorielle(4)"], answer:1, exp:"factorielle(3) attend factorielle(2)=2, puis 3×2=6." },
+  { q:"Le PGCD récursif (Euclide) : pgcd(a,b) =", options:["a + b","pgcd(b, a mod b), base b=0 → a","a × b","pgcd(a-1, b)"], answer:1, exp:"Algorithme d'Euclide : on remplace (a,b) par (b, a mod b)." },
+  { q:"pgcd(18, 12) vaut :", options:["2","3","6","12"], answer:2, exp:"18 et 12 ont pour plus grand diviseur commun 6." },
+  { q:"Pourquoi préférer l'itératif pour Fibonacci en pratique ?", options:["Plus joli","Évite les recalculs → bien plus rapide, mémoire constante","Impossible en récursif","Pour utiliser un tableau"], answer:1, exp:"La version itérative est O(n) sans recalculs ni pile qui gonfle." },
+  { q:"« Hypothèse de récurrence » signifie :", options:["On suppose que l'appel sur le cas plus petit marche déjà","On répète la boucle","On ignore le cas de base","On trie d'abord"], answer:0, exp:"On raisonne en supposant l'appel récursif correct pour (n-1) / le reste." },
+  { q:"Tout algorithme récursif peut-il s'écrire de façon itérative ?", options:["Non, jamais","Oui (et inversement)","Seulement les tris","Seulement avec un tableau"], answer:1, exp:"Récursif et itératif sont équivalents en puissance." },
+  { q:"Dans MaxPoids(L), le cas de base est :", options:["L = Nil","L^.suivant = Nil (un seul élément restant)","poids = 0","L = 1"], answer:1, exp:"Quand il ne reste qu'un colis, c'est lui le max." },
+  { q:"Symptôme d'une récursion mal écrite à l'exécution :", options:["Écran bleu garanti","Débordement de pile / plantage","Le programme va plus vite","Aucun effet"], answer:1, exp:"Trop d'appels empilés ⟹ stack overflow." }
+];
+</script>
+<script src="../js/data.js"></script>
+<script src="../js/app.js"></script>
+<script src="../js/quiz.js"></script>
+<script src="../js/chapter.js"></script>
+<script src="../js/visualizers/recursion.js"></script>
+</body>
+</html>

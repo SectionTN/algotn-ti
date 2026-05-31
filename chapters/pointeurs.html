@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Les pointeurs — AlgoTN</title>
+<meta name="description" content="Comprendre les pointeurs : adresse mémoire, déréférencement (^), &, allocation dynamique (Allouer/Liberer), pointeur Nil et pendant, avec visualiseur mémoire.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%23ef4444'/><text x='50' y='72' font-size='58' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold'>➶</text></svg>">
+<link rel="stylesheet" href="../css/theme.css">
+<link rel="stylesheet" href="../css/main.css">
+</head>
+<body data-chapter="pointeurs">
+<div class="readbar"></div>
+
+<header class="topbar">
+  <div class="topbar__inner">
+    <button class="iconbtn menu-toggle" title="Menu">☰</button>
+    <a class="brand" href="../index.html"><span class="brand__logo">A</span><span>AlgoTN <small>Algorithmique · TI</small></span></a>
+    <nav>
+      <a href="../index.html">Accueil</a>
+      <a href="../index.html#chapitres" class="active">Chapitres</a>
+      <a href="../pages/revision.html">Révision</a>
+      <a href="../pages/exercices.html">Exercices</a>
+    </nav>
+    <span class="topbar__spacer"></span>
+    <button class="iconbtn" data-search-open title="Rechercher (Ctrl+K)">🔍</button>
+    <button class="iconbtn" data-theme-toggle title="Thème"><span data-theme-icon>🌙</span></button>
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <h4>Chapitres</h4>
+    <nav id="chap-nav"></nav>
+    <h4>Dans ce chapitre</h4>
+    <nav class="toc" id="toc"></nav>
+    <button class="btn btn--soft btn--sm" id="fav-btn" style="margin-top:14px;width:100%">☆ Mettre en favori</button>
+  </aside>
+
+  <article class="article">
+    <div class="crumbs"><a href="../index.html">Accueil</a> › <a href="../index.html#chapitres">Chapitres</a> › <span>Pointeurs</span></div>
+    <span class="lead-chip" style="margin-top:14px">⭐ Chapitre clé d'examen · ➶ Pointeurs</span>
+    <h1 style="margin-top:12px">Les pointeurs, démystifiés</h1>
+    <p class="lead muted">Le mot fait peur. Pourtant l'idée tient en une phrase : un pointeur, c'est une variable qui contient une <b>adresse</b> au lieu d'une valeur. Une fois cette image en tête, tout le reste (^ , &amp;, Allouer, Liberer) devient logique.</p>
+
+    <!-- 1 -->
+    <h2 id="memoire"><span class="num">1</span> D'abord : qu'est-ce que la mémoire ?</h2>
+    <p>Imagine une immense rangée de <b>casiers</b> numérotés. Chaque casier a une <b>adresse</b> (son numéro) et peut contenir une <b>valeur</b>. Quand tu écris <code>Var n : entier</code>, le système te réserve un casier et lui colle l'étiquette « n ».</p>
+    <div class="note note--analogy"><span class="note__ic">🏨</span><div class="note__body">
+      <strong>Analogie : l'hôtel</strong>
+      Une variable, c'est une <b>chambre d'hôtel</b>. La <b>valeur</b>, c'est le client à l'intérieur. L'<b>adresse</b>, c'est le numéro de la porte. Un <b>pointeur</b>, c'est un papier sur lequel tu as noté un numéro de chambre : il ne contient pas le client, juste « où le trouver ».
+    </div></div>
+
+    <!-- 2 -->
+    <h2 id="definition"><span class="num">2</span> Pointeur, adresse (&amp;) et déréférencement (^)</h2>
+    <p>Trois notations à ne jamais confondre. C'est LE point que les examens adorent piéger.</p>
+    <table class="cmp">
+      <tr><th>Notation</th><th>Lecture</th><th>Sens</th></tr>
+      <tr><td><code>p : ^entier</code></td><td>« p pointeur vers entier »</td><td>p est une variable qui contiendra une <b>adresse</b> d'entier.</td></tr>
+      <tr><td><code>&amp;n</code></td><td>« adresse de n »</td><td>Donne le numéro de casier de n.</td></tr>
+      <tr><td><code>p ← &amp;n</code></td><td>« p reçoit l'adresse de n »</td><td>p « pointe sur » n.</td></tr>
+      <tr><td><code>p^</code></td><td>« valeur pointée par p »</td><td>On suit la flèche : on va lire/écrire <b>dans le casier</b> dont p a l'adresse.</td></tr>
+    </table>
+    <div class="note note--why"><span class="note__ic">🤔</span><div class="note__body">
+      <strong>Pourquoi les pointeurs existent ?</strong>
+      ① Pour <b>modifier une variable depuis une procédure</b> (passage par adresse). ② Pour créer des structures qui <b>grandissent à l'exécution</b> (listes chaînées, arbres). ③ Pour <b>partager</b> une donnée sans la recopier. Sans eux, pas de structures dynamiques.
+    </div></div>
+
+    <!-- VISUALISEUR -->
+    <h2 id="visualiseur"><span class="num">3</span> Visualiseur mémoire : suis la flèche</h2>
+    <p>Avance pas à pas dans chaque scénario. Observe l'adresse stockée dans le pointeur et la flèche vers le casier pointé. Le scénario « Allouer / Liberer » te montre le piège du <b>pointeur pendant</b> (la question classique d'examen).</p>
+    <div data-viz-pointers></div>
+
+    <!-- 4 -->
+    <h2 id="exemple"><span class="num">4</span> Exemple ligne par ligne</h2>
+    <div class="code">
+      <div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">pointeur_base.algo</span><button class="code__copy">Copier</button></div>
+      <pre><code data-raw="Algorithme demo
+Var
+    n : entier
+    p : ^entier
+Début
+    n <- 25
+    p <- &n          // p pointe sur n
+    Ecrire(p^)       // affiche 25
+    p^ <- 99         // modifie n via p
+    Ecrire(n)        // affiche 99
+Fin"></code></pre>
+    </div>
+    <div class="lines">
+      <div class="lines__row"><div class="lines__code">p : ^entier</div><div class="lines__exp">p pourra contenir l'adresse d'un entier. Au départ il ne pointe sur rien de fiable.</div></div>
+      <div class="lines__row"><div class="lines__code">p <- &n</div><div class="lines__exp">p reçoit l'<b>adresse</b> de n. Désormais « p pointe sur n ».</div></div>
+      <div class="lines__row"><div class="lines__code">Ecrire(p^)</div><div class="lines__exp">p^ = la valeur <b>dans</b> le casier pointé = la valeur de n = 25.</div></div>
+      <div class="lines__row"><div class="lines__code">p^ <- 99</div><div class="lines__exp">On écrit 99 dans le casier pointé. Comme c'est celui de n, <b>n devient 99</b>. C'est tout le pouvoir (et le danger) des pointeurs.</div></div>
+    </div>
+
+    <!-- 5 allocation -->
+    <h2 id="allocation"><span class="num">5</span> Allocation dynamique : Allouer &amp; Liberer</h2>
+    <p>Jusqu'ici p pointait sur une variable existante (n). Mais on peut aussi demander une <b>case toute neuve</b>, sans nom, créée pendant l'exécution :</p>
+    <ul>
+      <li><code>Allouer(p)</code> → réserve une nouvelle case en mémoire et met son adresse dans p.</li>
+      <li><code>Liberer(p)</code> → rend cette case au système. À ne pas oublier, sinon <b>fuite mémoire</b>.</li>
+    </ul>
+    <div class="code">
+      <div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">allocation.algo</span><button class="code__copy">Copier</button></div>
+      <pre><code data-raw="Var p : ^entier
+Début
+    Allouer(p)       // nouvelle case réservée
+    p^ <- 10
+    Ecrire(p^)       // 10
+    Liberer(p)       // case rendue au système
+Fin"></code></pre>
+    </div>
+
+    <!-- 6 pièges -->
+    <h2 id="pieges"><span class="num">6</span> Nil, pointeur pendant &amp; pièges d'examen</h2>
+    <table class="cmp">
+      <tr><th>Notion</th><th>Définition</th><th>Danger</th></tr>
+      <tr><td><b>Pointeur Nil</b></td><td>p ← Nil : p « ne pointe sur rien ».</td><td>Faire <code>p^</code> sur un Nil = erreur. Toujours tester avant.</td></tr>
+      <tr><td><b>Pointeur non initialisé</b></td><td>p déclaré mais jamais affecté.</td><td>Contient une adresse au hasard → accès à une zone mémoire non autorisée.</td></tr>
+      <tr><td><b>Pointeur pendant</b></td><td>p pointe sur une case déjà <code>Liberer</code>.</td><td>Utiliser <code>p^</code> ensuite = comportement indéfini / <b>erreur</b>.</td></tr>
+    </table>
+    <div class="note note--exam"><span class="note__ic">🎯</span><div class="note__body">
+      <strong>Le piège classique (vu en devoir)</strong>
+      <code>Allouer(p) ; p^ ← 10 ; Liberer(p) ; p^ ← 4 ; Ecrire(p^)</code>. Beaucoup répondent « 4 » ou « 10 ». La bonne réponse est <b>ERREUR</b> : après <code>Liberer(p)</code>, p est un pointeur pendant ; écrire <code>p^ ← 4</code> accède à une case libérée. Rejoue le scénario « Allouer/Liberer » du visualiseur pour le voir.
+    </div></div>
+
+    <!-- 7 procédures -->
+    <h2 id="param"><span class="num">7</span> Pourquoi c'est lié aux procédures</h2>
+    <p>Pour qu'une procédure modifie réellement une variable de l'appelant, elle doit recevoir son <b>adresse</b> (passage par référence, mot-clé <code>var</code> en pseudo-code, pointeur en C). Sinon elle ne travaille que sur une <b>copie</b>.</p>
+    <div class="note note--intui"><span class="note__ic">🔁</span><div class="note__body">
+      <strong>Échanger deux valeurs</strong>
+      Une procédure <code>Echanger</code> qui reçoit deux valeurs par copie ne change rien chez l'appelant. Si elle reçoit deux <b>pointeurs</b> (ou <code>var</code>), elle agit sur les vraies cases. Le scénario « Échanger » du visualiseur le montre.
+    </div></div>
+
+    <!-- 8 exercices -->
+    <h2 id="exercices"><span class="num">8</span> Exercices guidés &amp; corrigés</h2>
+
+    <div class="exo">
+      <div class="exo__head"><span class="pill pill--facile">Facile</span><span class="pill pill--examen">TD3</span><h4>Pointeur et variable pointée</h4></div>
+      <p class="exo__statement">Déclare un entier n et un pointeur vers cet entier. Affiche, de deux manières, la valeur de n.</p>
+      <button class="btn btn--soft btn--sm exo__toggle" data-exo-toggle>▼ Voir la correction détaillée</button>
+      <div class="exo__sol">
+        <div class="exo__step"><b>Idée.</b> Directement avec <code>n</code>, ou indirectement via <code>p^</code> après <code>p ← &amp;n</code>.</div>
+        <div class="code"><div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">td3_ex1.algo</span><button class="code__copy">Copier</button></div>
+          <pre><code data-raw="Var n : entier ; p : ^entier
+Début
+    n <- 42
+    p <- &n
+    Ecrire(n)     // 1ère façon : directe
+    Ecrire(p^)    // 2ème façon : via le pointeur
+Fin"></code></pre></div>
+      </div>
+    </div>
+
+    <div class="exo">
+      <div class="exo__head"><span class="pill pill--moyen">Moyen</span><span class="pill pill--examen">TD3</span><h4>Inverser un tableau avec un pointeur</h4></div>
+      <p class="exo__statement">Range les éléments d'un tableau A dans l'ordre inverse, en utilisant un pointeur et une variable d'aide pour la permutation.</p>
+      <button class="btn btn--soft btn--sm exo__toggle" data-exo-toggle>▼ Voir la correction détaillée</button>
+      <div class="exo__sol">
+        <div class="exo__step"><b>Idée.</b> On échange A[i] avec A[n-1-i] pour i de 0 à n/2. La variable <code>aux</code> évite d'écraser une valeur pendant l'échange.</div>
+        <div class="code"><div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">inverser.algo</span><button class="code__copy">Copier</button></div>
+          <pre><code data-raw="Var A : Tableau[0..n-1] de entier
+    i, aux : entier
+Début
+    Pour i De 0 À (n div 2) - 1 Faire
+        aux <- A[i]
+        A[i] <- A[n-1-i]
+        A[n-1-i] <- aux
+    FinPour
+Fin"></code></pre></div>
+        <div class="exo__step"><b>Piège.</b> Boucler jusqu'à n (et non n/2) ré-inverse le tableau → on retombe sur l'ordre initial !</div>
+      </div>
+    </div>
+
+    <div class="exo">
+      <div class="exo__head"><span class="pill pill--moyen">Moyen</span><span class="pill pill--examen">TD3</span><h4>Palindrome avec pointeurs</h4></div>
+      <p class="exo__statement">Vérifie si une chaîne est un palindrome (lue pareil dans les deux sens : RADAR, AZIZA, 2002…).</p>
+      <button class="btn btn--soft btn--sm exo__toggle" data-exo-toggle>▼ Voir la correction détaillée</button>
+      <div class="exo__sol">
+        <div class="exo__step"><b>Idée.</b> Deux indices : un au début (g), un à la fin (d). On compare, on resserre. Dès qu'ils diffèrent → pas palindrome.</div>
+        <div class="code"><div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">palindrome.algo</span><button class="code__copy">Copier</button></div>
+          <pre><code data-raw="Fonction estPalindrome(ch : chaine) : booleen
+Var g, d : entier
+Début
+    g <- 0
+    d <- longueur(ch) - 1
+    TantQue (g < d) Faire
+        Si (ch[g] <> ch[d]) Alors
+            Retourner Faux
+        FinSi
+        g <- g + 1
+        d <- d - 1
+    FinTantQue
+    Retourner Vrai
+FinFonction"></code></pre></div>
+      </div>
+    </div>
+
+    <!-- QCM -->
+    <h2 id="qcm"><span class="num">9</span> QCM — teste-toi</h2>
+    <p>25 questions dont les pièges récurrents d'examen (pointeur pendant, Nil, &amp; vs ^).</p>
+    <div class="quiz" data-quiz="pointeurs" data-time="600"></div>
+
+    <!-- résumé -->
+    <h2 id="resume"><span class="num">10</span> Mini-résumé à retenir</h2>
+    <div class="card" style="background:var(--surface-2)"><ul style="margin-top:0">
+      <li>Pointeur = variable qui contient une <b>adresse</b>.</li>
+      <li><code>&amp;n</code> = adresse de n · <code>p^</code> = valeur pointée par p.</li>
+      <li><code>Allouer(p)</code> crée une case ; <code>Liberer(p)</code> la rend (sinon fuite).</li>
+      <li>Après <code>Liberer</code>, p est <b>pendant</b> : ne plus utiliser <code>p^</code> (= erreur).</li>
+      <li>Nil = « pointe sur rien » ; tester avant de déréférencer.</li>
+    </ul></div>
+
+    <div id="prevnext" style="display:flex;gap:14px;margin-top:34px;flex-wrap:wrap"></div>
+  </article>
+</div>
+
+<footer class="footer"><div class="footer__inner">
+  <div><b class="grad-text">AlgoTN</b> — Programme Algorithmique & Structures de Données, TI.</div>
+  <div>100% hors-ligne · Ta progression reste sur ton appareil.</div>
+</div></footer>
+
+<button class="iconbtn totop" title="Haut de page">↑</button>
+<div class="search-modal"><div class="search-box"><input type="text" placeholder="Rechercher un chapitre… (Échap pour fermer)"><div class="search-results"></div></div></div>
+
+<script>
+window.ALGOTN_QUIZ = [
+  { q:"Un pointeur, c'est :", options:["Une variable qui stocke une valeur numérique","Une variable qui stocke l'adresse d'une autre variable","Une opération arithmétique","Une fonction qui calcule"], answer:1, exp:"Le pointeur contient une adresse mémoire, pas une donnée 'normale'." },
+  { q:"Que signifie p^ ?", options:["L'adresse de p","La valeur pointée par p","p au carré","Le type de p"], answer:1, exp:"^ = déréférencement : on accède au contenu du casier pointé." },
+  { q:"Que signifie &n ?", options:["La valeur de n","L'adresse de n","n + 1","Le double de n"], answer:1, exp:"& renvoie l'adresse mémoire de la variable." },
+  { q:"Après 'p ← &n ; p^ ← 99', que vaut n ?", options:["Inchangé","99","0","Nil"], answer:1, exp:"p pointe sur n, donc écrire via p^ modifie n." },
+  { q:"Le risque d'un pointeur NON initialisé :", options:["Pointe vers 0","Accès à une zone mémoire non autorisée","Fonctionne normalement","Vaut la variable précédente"], answer:1, exp:"Il contient une adresse aléatoire, dangereuse à déréférencer." },
+  { q:"p ← Nil signifie que p :", options:["Pointe sur 0","Ne pointe sur rien","Pointe sur lui-même","Est un entier"], answer:1, exp:"Nil = absence de cible valide." },
+  { q:"Pour réserver une nouvelle case mémoire :", options:["Liberer(p)","Allouer(p)","p ← Nil","Ecrire(p)"], answer:1, exp:"Allouer crée dynamiquement une case et met son adresse dans p." },
+  { q:"Pour libérer la case réservée par p :", options:["Liberer(p)","Liberer(p^)","Allouer(p)","p ← 0"], answer:0, exp:"On libère via le pointeur lui-même : Liberer(p)." },
+  { q:"Séquence : Allouer(p); p^←10; Liberer(p); p^←4; Ecrire(p^). Résultat :", options:["4","10","Erreur (pointeur pendant)","0"], answer:2, exp:"Après Liberer, la case n'existe plus : écrire p^ est une erreur." },
+  { q:"Un pointeur pendant (dangling) est un pointeur qui :", options:["Pointe sur une case valide","Pointe sur une case déjà libérée","Ne pointe nulle part dès le départ","Vaut Nil"], answer:1, exp:"Il garde l'adresse d'une zone qui n'est plus à nous." },
+  { q:"Pourquoi utiliser des pointeurs pour les listes chaînées ?", options:["Pour accéder aux éléments sans indices fixes / chaîner dynamiquement","Pour éviter de stocker des données","Pour réduire la taille des variables","Pour accélérer les additions"], answer:0, exp:"Chaque nœud pointe vers le suivant : structure dynamique sans tableau." },
+  { q:"Oublier Liberer après Allouer provoque :", options:["Une erreur de compilation","Une fuite mémoire","Un palindrome","Un débordement de pile"], answer:1, exp:"La case reste réservée pour rien : memory leak." },
+  { q:"p : ^caractère. p peut contenir :", options:["Des valeurs de type caractère","Des adresses de variables de type caractère","Des entiers","Des chaînes"], answer:1, exp:"Un pointeur stocke des adresses, ici d'un caractère." },
+  { q:"Faire p^ alors que p = Nil :", options:["Renvoie 0","Provoque une erreur","Affecte Nil","N'a aucun effet"], answer:1, exp:"On déréférence du vide : erreur d'exécution." },
+  { q:"Pour qu'une procédure modifie la variable de l'appelant, il faut :", options:["La passer par copie","La passer par adresse (var / pointeur)","La déclarer en constante","Utiliser une boucle"], answer:1, exp:"Le passage par référence donne accès à la vraie case mémoire." },
+  { q:"Différence entre p et p^ :", options:["Aucune","p = l'adresse (pointeur) ; p^ = la valeur pointée","p^ est plus rapide","p est un entier"], answer:1, exp:"p contient une adresse ; p^ suit cette adresse vers la valeur." },
+  { q:"&n donne une valeur de type :", options:["entier","adresse / pointeur","caractère","booléen"], answer:1, exp:"L'adresse d'une variable est compatible avec un pointeur vers son type." },
+  { q:"Les pointeurs permettent de créer des structures :", options:["Statiques uniquement","Dynamiques (qui grandissent à l'exécution)","Plus lentes","Sans mémoire"], answer:1, exp:"Listes, piles, files, arbres reposent sur des pointeurs." },
+  { q:"Après Allouer(p), p^ vaut :", options:["0 garanti","Une valeur indéterminée tant qu'on n'a rien écrit","Nil","L'adresse de p"], answer:1, exp:"La case est réservée mais pas initialisée." },
+  { q:"Quelle écriture pointe p sur la variable x ?", options:["p ← x","p ← &x","p^ ← x","x ← p"], answer:1, exp:"On affecte l'adresse de x à p." },
+  { q:"Échanger 2 variables via pointeurs nécessite :", options:["1 pointeur","2 pointeurs + une variable d'aide","Aucun pointeur","Un tableau"], answer:1, exp:"On sauvegarde une valeur dans aux, puis on permute via les pointeurs." },
+  { q:"Tester un pointeur avant de l'utiliser, c'est vérifier :", options:["p^ = 0","p ≠ Nil","p > 100","p est pair"], answer:1, exp:"On s'assure que p pointe sur une case valide avant p^." },
+  { q:"Le 'tas' (heap) est la zone où :", options:["Vivent les variables locales","On alloue dynamiquement (Allouer)","Est stocké le code","Rien n'est stocké"], answer:1, exp:"Allouer y réserve des cases anonymes." },
+  { q:"Dans une liste chaînée, le champ 'suivant' d'un nœud est :", options:["Un entier","Un pointeur vers le nœud suivant","Une chaîne","Toujours Nil"], answer:1, exp:"Il contient l'adresse du nœud suivant (ou Nil à la fin)." },
+  { q:"Le dernier nœud d'une liste chaînée a son suivant à :", options:["0","Nil","Lui-même","La tête"], answer:1, exp:"Nil marque la fin de la chaîne." }
+];
+</script>
+<script src="../js/data.js"></script>
+<script src="../js/app.js"></script>
+<script src="../js/quiz.js"></script>
+<script src="../js/chapter.js"></script>
+<script src="../js/visualizers/pointers.js"></script>
+</body>
+</html>

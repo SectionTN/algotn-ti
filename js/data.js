@@ -1,0 +1,57 @@
+/* ============================================================
+   AlgoTN — Registre des chapitres (programme TI1 — ISET)
+   ============================================================ */
+window.ALGOTN_CHAPTERS = [
+  { id:"bases", num:"01", slug:"chapters/bases.html", title:"Algorithmes de base", icon:"▶",
+    desc:"DÉBUT, FIN, variables, affectation, lecture/écriture. Le squelette de tout algorithme.",
+    tags:["Variables","E/S","Affectation"], grad:"linear-gradient(135deg,#6366f1,#8b5cf6)", built:false },
+  { id:"conditions", num:"02", slug:"chapters/conditions.html", title:"Les conditions", icon:"⑂",
+    desc:"SI…ALORS…SINON et SELON. Apprendre à faire choisir une décision à la machine.",
+    tags:["SI","SELON","Booléens"], grad:"linear-gradient(135deg,#3b82f6,#06b6d4)", built:false },
+  { id:"boucles", num:"03", slug:"chapters/boucles.html", title:"Les boucles", icon:"↻",
+    desc:"POUR, TANT QUE, RÉPÉTER. Répéter sans se répéter : le cœur de la puissance algorithmique.",
+    tags:["POUR","TANT QUE","RÉPÉTER"], grad:"linear-gradient(135deg,#06b6d4,#10b981)", built:false },
+  { id:"tableaux", num:"04", slug:"chapters/tableaux.html", title:"Les tableaux", icon:"▦",
+    desc:"Tableaux 1D et 2D : ranger plusieurs valeurs sous un même nom, par indice.",
+    tags:["1D","2D","Parcours"], grad:"linear-gradient(135deg,#10b981,#84cc16)", built:false },
+  { id:"procedures", num:"05", slug:"chapters/procedures-fonctions.html", title:"Procédures & Fonctions", icon:"ƒ",
+    desc:"Découper un gros problème en briques réutilisables. Paramètres, retour, portée.",
+    tags:["Paramètres","Retour","Pile"], grad:"linear-gradient(135deg,#f59e0b,#ef4444)", built:false, important:true },
+  { id:"recursivite", num:"06", slug:"chapters/recursivite.html", title:"La récursivité", icon:"∞",
+    desc:"Une fonction qui s'appelle elle-même. Cas de base, descente, remontée et pile d'appels visualisée.",
+    tags:["Cas de base","Pile d'appels","Fibonacci"], grad:"linear-gradient(135deg,#8b5cf6,#ec4899)", built:true, important:true },
+  { id:"enregistrements", num:"07", slug:"chapters/enregistrements.html", title:"Les enregistrements", icon:"▤",
+    desc:"Regrouper des champs de types différents dans une même structure (un produit, un étudiant…).",
+    tags:["Structure","Champs","Type"], grad:"linear-gradient(135deg,#ec4899,#f43f5e)", built:false },
+  { id:"pointeurs", num:"08", slug:"chapters/pointeurs.html", title:"Les pointeurs", icon:"➶",
+    desc:"Adresse mémoire, déréférencement, allocation. La notion qui fait peur… rendue limpide.",
+    tags:["Adresse","^","Allouer/Liberer"], grad:"linear-gradient(135deg,#ef4444,#f59e0b)", built:true, important:true },
+  { id:"listes", num:"09", slug:"chapters/listes-chainees.html", title:"Les listes chaînées", icon:"⛓",
+    desc:"Des nœuds reliés par des pointeurs. Insertion, suppression, parcours, tri — tout animé.",
+    tags:["Nœud","Insertion","Suppression"], grad:"linear-gradient(135deg,#0ea5e9,#6366f1)", built:true, important:true },
+  { id:"structures-dyn", num:"10", slug:"chapters/structures-dynamiques.html", title:"Structures dynamiques", icon:"❖",
+    desc:"Mémoire qui grandit et rétrécit à l'exécution. Pourquoi le statique ne suffit pas.",
+    tags:["Dynamique","Tas","Allocation"], grad:"linear-gradient(135deg,#6366f1,#0ea5e9)", built:false },
+  { id:"piles", num:"11", slug:"chapters/piles.html", title:"Les piles", icon:"▣",
+    desc:"LIFO : le dernier arrivé, premier servi. Empiler / dépiler animé.",
+    tags:["LIFO","Push","Pop"], grad:"linear-gradient(135deg,#14b8a6,#06b6d4)", built:false },
+  { id:"files", num:"12", slug:"chapters/files.html", title:"Les files", icon:"▤",
+    desc:"FIFO : premier arrivé, premier servi. Enfiler / défiler animé.",
+    tags:["FIFO","Enfiler","Défiler"], grad:"linear-gradient(135deg,#06b6d4,#3b82f6)", built:false },
+  { id:"recherche", num:"13", slug:"chapters/recherche.html", title:"La recherche", icon:"⌕",
+    desc:"Recherche séquentielle vs dichotomique. Trouver vite dans un tableau trié.",
+    tags:["Séquentielle","Dichotomique"], grad:"linear-gradient(135deg,#a855f7,#6366f1)", built:false },
+  { id:"tri", num:"14", slug:"chapters/tri.html", title:"Les tris", icon:"⇅",
+    desc:"Bulle, sélection, insertion. Chaque échange et comparaison animé pas à pas.",
+    tags:["Bulle","Sélection","Insertion"], grad:"linear-gradient(135deg,#f43f5e,#ec4899)", built:false },
+  { id:"complexite", num:"15", slug:"chapters/complexite.html", title:"La complexité", icon:"𝒪",
+    desc:"O(1), O(n), O(log n), O(n²). Pourquoi un algorithme est rapide… ou lent.",
+    tags:["Big-O","Performance"], grad:"linear-gradient(135deg,#64748b,#334155)", built:false },
+];
+
+/* Banque de QCM par chapitre — alimentée par chaque page chapitre via window.ALGOTN_QUIZ */
+window.ALGOTN_META = {
+  site: "AlgoTN",
+  baseline: "Apprendre l'algorithmique pour de vrai.",
+  source: "Programme Algorithmique & Structures de Données — TI1, ISET Sidi Bouzid"
+};

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fiches de révision — AlgoTN</title>
+<meta name="description" content="Fiches de révision ultra-condensées et 'Dernière heure avant examen' : définitions, syntaxe, pièges et astuces pour l'algorithmique TI.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%236366f1'/><text x='50' y='70' font-size='60' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold'>A</text></svg>">
+<link rel="stylesheet" href="../css/theme.css">
+<link rel="stylesheet" href="../css/main.css">
+</head>
+<body>
+<div class="readbar"></div>
+<header class="topbar"><div class="topbar__inner">
+  <a class="brand" href="../index.html"><span class="brand__logo">A</span><span>AlgoTN <small>Algorithmique · TI</small></span></a>
+  <nav>
+    <a href="../index.html">Accueil</a>
+    <a href="../index.html#chapitres">Chapitres</a>
+    <a href="revision.html" class="active">Révision</a>
+    <a href="exercices.html">Exercices</a>
+  </nav>
+  <span class="topbar__spacer"></span>
+  <button class="iconbtn" data-search-open title="Rechercher (Ctrl+K)">🔍</button>
+  <button class="iconbtn" data-theme-toggle title="Thème"><span data-theme-icon>🌙</span></button>
+</div></header>
+
+<section class="hero" style="padding:54px 0 20px"><div class="container hero__inner">
+  <span class="badge-line"><span class="dot"></span> À lire la veille (et le matin) de l'examen</span>
+  <h1 style="margin-top:16px">Fiches de <span class="grad-text">révision</span></h1>
+  <p class="lead">Tout ce qui compte, condensé. Si tu n'as qu'une heure, lis « Dernière heure avant l'examen » plus bas.</p>
+</div></section>
+
+<section class="section" style="padding-top:20px"><div class="container">
+
+  <!-- DERNIÈRE HEURE -->
+  <div class="card reveal" style="border-left:5px solid #a855f7;background:rgba(168,85,247,.06)">
+    <span class="pill pill--examen">⏰ Dernière heure avant l'examen</span>
+    <h2 style="margin-top:12px;font-size:1.5rem">Les 12 réflexes qui sauvent</h2>
+    <div class="grid grid--3" style="margin-top:8px">
+      <div class="note note--exam"><span class="note__ic">①</span><div class="note__body"><strong>Pointeur</strong> = variable qui contient une <b>adresse</b>. <code>&amp;n</code> = adresse de n ; <code>p^</code> = valeur pointée.</div></div>
+      <div class="note note--exam"><span class="note__ic">②</span><div class="note__body">Après <code>Liberer(p)</code>, p est <b>pendant</b> : utiliser <code>p^</code> = <b>ERREUR</b> (piège récurrent).</div></div>
+      <div class="note note--exam"><span class="note__ic">③</span><div class="note__body"><code>Allouer</code> sans <code>Liberer</code> = <b>fuite mémoire</b>. Nil = « pointe sur rien ».</div></div>
+      <div class="note note--exam"><span class="note__ic">④</span><div class="note__body">Récursivité = <b>cas de base</b> + <b>cas récursif</b> (plus petit). Pas de base → débordement de pile.</div></div>
+      <div class="note note--exam"><span class="note__ic">⑤</span><div class="note__body">Sur une <b>liste</b> : base = <code>L = Nil</code> ; appel récursif sur <code>L^.suivant</code>.</div></div>
+      <div class="note note--exam"><span class="note__ic">⑥</span><div class="note__body">Nœud = <b>valeur + suivant</b>. Fin de liste = <b>Nil</b>. Tête = pointeur sur le 1ᵉʳ nœud.</div></div>
+      <div class="note note--exam"><span class="note__ic">⑦</span><div class="note__body">Insertion en <b>tête</b> : <code>p^.suivant ← L</code> PUIS <code>L ← p</code> (jamais l'inverse).</div></div>
+      <div class="note note--exam"><span class="note__ic">⑧</span><div class="note__body">Suppression : garde <code>prec</code> + gère le cas <b>tête</b> (prec = Nil) + <code>Liberer</code>.</div></div>
+      <div class="note note--exam"><span class="note__ic">⑨</span><div class="note__body">Tableau = accès O(1) mais taille fixe ; Liste = O(n) mais dynamique.</div></div>
+      <div class="note note--exam"><span class="note__ic">⑩</span><div class="note__body">Fonction <b>renvoie</b> une valeur (Retourner) ; Procédure <b>agit</b> (souvent via <code>var</code>).</div></div>
+      <div class="note note--exam"><span class="note__ic">⑪</span><div class="note__body">Modifier l'argument de l'appelant ⟹ passage par <b>adresse / var</b>, pas par copie.</div></div>
+      <div class="note note--exam"><span class="note__ic">⑫</span><div class="note__body">Complexité utile : factorielle O(n), Fibonacci naïf O(2ⁿ), parcours liste O(n).</div></div>
+    </div>
+  </div>
+
+  <!-- FICHES PAR CHAPITRE -->
+  <h2 style="margin-top:40px;font-size:1.6rem">Fiches express par chapitre</h2>
+  <div class="grid grid--3" style="margin-top:14px">
+
+    <div class="card reveal" style="border-top:4px solid #8b5cf6">
+      <h3>∞ Récursivité</h3>
+      <ul style="font-size:.9rem">
+        <li>2 parties : cas de base + cas récursif.</li>
+        <li>Descente (empile) → remontée (dépile/combine).</li>
+        <li>Hypothèse de récurrence : suppose l'appel sur (n−1) correct.</li>
+        <li>Pièges : pas de base, problème non réduit, oublier Retourner.</li>
+      </ul>
+      <a class="btn btn--soft btn--sm" href="../chapters/recursivite.html">Ouvrir le chapitre →</a>
+    </div>
+
+    <div class="card reveal" style="border-top:4px solid #ef4444">
+      <h3>➶ Pointeurs</h3>
+      <ul style="font-size:.9rem">
+        <li><code>p:^entier</code>, <code>p←&amp;n</code>, <code>p^</code> = valeur pointée.</li>
+        <li><code>Allouer</code>/<code>Liberer</code> ; Nil ; pointeur pendant.</li>
+        <li>Modifier via p^ modifie la vraie variable.</li>
+        <li>Piège examen : écrire après Liberer = erreur.</li>
+      </ul>
+      <a class="btn btn--soft btn--sm" href="../chapters/pointeurs.html">Ouvrir le chapitre →</a>
+    </div>
+
+    <div class="card reveal" style="border-top:4px solid #0ea5e9">
+      <h3>⛓️ Listes chaînées</h3>
+      <ul style="font-size:.9rem">
+        <li>Nœud = valeur + suivant ; fin = Nil.</li>
+        <li>Insertion tête O(1) ; accès i-ème / queue O(n).</li>
+        <li>Insérer/supprimer = rebrancher pointeurs (+ prec).</li>
+        <li>Toujours gérer le cas de la tête.</li>
+      </ul>
+      <a class="btn btn--soft btn--sm" href="../chapters/listes-chainees.html">Ouvrir le chapitre →</a>
+    </div>
+  </div>
+
+  <!-- RAPPEL SYNTAXE -->
+  <h2 style="margin-top:40px;font-size:1.6rem">Rappel de syntaxe (pseudo-code TI)</h2>
+  <div class="code" style="margin-top:14px">
+    <div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">aide_memoire.algo</span><button class="code__copy">Copier</button></div>
+    <pre><code data-raw="Algorithme nom
+Var x : entier ; p : ^entier
+Type Liste = ^Noeud
+     Noeud = Enregistrement valeur:entier ; suivant:Liste FinEnregistrement
+Début
+    x <- 5                       // affectation
+    Lire(x) ; Ecrire(x)          // entrée / sortie
+    Si (x > 0) Alors ... Sinon ... FinSi
+    Selon x Cas 1: ... Cas 2: ... FinSelon
+    Pour i De 1 À n Faire ... FinPour
+    TantQue (cond) Faire ... FinTantQue
+    Répéter ... Jusqu'à (cond)
+    p <- &x ; Ecrire(p^)
+    Allouer(p) ; Liberer(p)
+Fin"></code></pre>
+  </div>
+
+  <div class="card reveal center" style="margin-top:36px;background:var(--grad-brand);color:#fff;border:none;padding:36px">
+    <h2 style="color:#fff">Teste-toi maintenant</h2>
+    <p style="color:rgba(255,255,255,.9);margin:10px 0 18px">Chaque chapitre a un QCM en <b>mode examen</b> minuté. Le meilleur entraînement.</p>
+    <a class="btn" style="background:#fff;color:var(--brand-1)" href="exercices.html">Aller aux exercices & QCM →</a>
+  </div>
+</div></section>
+
+<footer class="footer"><div class="footer__inner">
+  <div><b class="grad-text">AlgoTN</b> — Programme Algorithmique & Structures de Données, TI.</div>
+  <div>100% hors-ligne · Bon courage pour l'examen ! 💪</div>
+</div></footer>
+
+<button class="iconbtn totop" title="Haut de page">↑</button>
+<div class="search-modal"><div class="search-box"><input type="text" placeholder="Rechercher un chapitre… (Échap pour fermer)"><div class="search-results"></div></div></div>
+<script src="../js/data.js"></script>
+<script src="../js/app.js"></script>
+</body>
+</html>

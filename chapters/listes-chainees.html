@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Les listes chaînées — AlgoTN</title>
+<meta name="description" content="Comprendre les listes chaînées : nœud, pointeur suivant, insertion en tête/queue, suppression, parcours, tri, et comparaison tableau vs liste, avec visualiseur animé.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%230ea5e9'/><text x='50' y='72' font-size='54' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold'>⛓</text></svg>">
+<link rel="stylesheet" href="../css/theme.css">
+<link rel="stylesheet" href="../css/main.css">
+</head>
+<body data-chapter="listes">
+<div class="readbar"></div>
+
+<header class="topbar">
+  <div class="topbar__inner">
+    <button class="iconbtn menu-toggle" title="Menu">☰</button>
+    <a class="brand" href="../index.html"><span class="brand__logo">A</span><span>AlgoTN <small>Algorithmique · TI</small></span></a>
+    <nav>
+      <a href="../index.html">Accueil</a>
+      <a href="../index.html#chapitres" class="active">Chapitres</a>
+      <a href="../pages/revision.html">Révision</a>
+      <a href="../pages/exercices.html">Exercices</a>
+    </nav>
+    <span class="topbar__spacer"></span>
+    <button class="iconbtn" data-search-open title="Rechercher (Ctrl+K)">🔍</button>
+    <button class="iconbtn" data-theme-toggle title="Thème"><span data-theme-icon>🌙</span></button>
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <h4>Chapitres</h4>
+    <nav id="chap-nav"></nav>
+    <h4>Dans ce chapitre</h4>
+    <nav class="toc" id="toc"></nav>
+    <button class="btn btn--soft btn--sm" id="fav-btn" style="margin-top:14px;width:100%">☆ Mettre en favori</button>
+  </aside>
+
+  <article class="article">
+    <div class="crumbs"><a href="../index.html">Accueil</a> › <a href="../index.html#chapitres">Chapitres</a> › <span>Listes chaînées</span></div>
+    <span class="lead-chip" style="margin-top:14px">⭐ Chapitre clé d'examen · ⛓️ Listes chaînées</span>
+    <h1 style="margin-top:12px">Les listes chaînées, maillon par maillon</h1>
+    <p class="lead muted">Un tableau, c'est rigide : taille fixe, tout collé. Une liste chaînée, c'est souple : des petits wagons (nœuds) reliés par des crochets (pointeurs), qu'on peut accrocher ou décrocher à volonté. C'est la première vraie <b>structure dynamique</b>.</p>
+
+    <!-- 1 -->
+    <h2 id="probleme"><span class="num">1</span> Le problème que ça résout</h2>
+    <p>Avec un tableau de 100 cases, si tu n'en utilises que 3, tu gaspilles ; et si tu en veux 101, tu es coincé. Insérer un élément au milieu oblige à <b>décaler</b> tous les suivants. La liste chaînée règle ces deux soucis : elle grandit à la demande, et insérer/supprimer = juste rebrancher deux flèches.</p>
+    <div class="note note--analogy"><span class="note__ic">🚂</span><div class="note__body">
+      <strong>Analogie : le train</strong>
+      Chaque <b>wagon</b> = un nœud. Il transporte une <b>donnée</b> (les passagers) et possède un <b>attelage</b> qui pointe vers le wagon suivant. La <b>locomotive</b> = la tête. Le dernier wagon n'est attelé à rien : son suivant = <b>Nil</b>.
+    </div></div>
+
+    <!-- 2 -->
+    <h2 id="noeud"><span class="num">2</span> Anatomie d'un nœud</h2>
+    <p>Un nœud contient deux choses : une <b>donnée</b> et un <b>pointeur</b> vers le nœud suivant. En pseudo-code TI :</p>
+    <div class="code">
+      <div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">structure.algo</span><button class="code__copy">Copier</button></div>
+      <pre><code data-raw="Type
+    Liste = ^Noeud
+    Noeud = Enregistrement
+        valeur : entier
+        suivant : Liste     // pointeur vers le nœud suivant
+    FinEnregistrement"></code></pre>
+    </div>
+    <div class="note note--intui"><span class="note__ic">🔗</span><div class="note__body">
+      <strong>La définition est récursive !</strong>
+      Un nœud contient un pointeur vers… un autre nœud. C'est pour ça que les listes et la récursivité vont si bien ensemble (longueur, max, recherche récursive). Le bout de la chaîne, c'est <b>Nil</b>.
+    </div></div>
+    <p>Une liste de 3 éléments se schématise ainsi :</p>
+    <div class="code"><div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">schéma</span></div>
+      <pre><code data-raw="tête → [ 3 | •]──→ [ 8 | •]──→ [ 5 |⊘]──→ Nil"></code></pre></div>
+
+    <!-- VISUALISEUR -->
+    <h2 id="visualiseur"><span class="num">3</span> Visualiseur : manipule la liste</h2>
+    <p>Insère en tête, en queue, supprime, recherche, parcours. Observe les nœuds apparaître/disparaître et la chaîne se rebrancher. L'insertion en <b>tête</b> est instantanée ; l'insertion en <b>queue</b> oblige à parcourir jusqu'au bout — remarque la différence !</p>
+    <div data-viz-linkedlist></div>
+
+    <!-- 4 tableau vs liste -->
+    <h2 id="vs-tableau"><span class="num">4</span> Tableau vs Liste chaînée</h2>
+    <p>Question d'examen classique : « pourquoi avoir choisi une liste chaînée ? ». Voici de quoi répondre avec assurance.</p>
+    <table class="cmp">
+      <tr><th></th><th>Tableau</th><th>Liste chaînée</th></tr>
+      <tr><td>Taille</td><td>Fixe (définie au départ)</td><td>Dynamique (grandit/rétrécit à l'exécution)</td></tr>
+      <tr><td>Mémoire</td><td>Bloc contigu</td><td>Nœuds éparpillés, reliés par pointeurs</td></tr>
+      <tr><td>Accès à l'élément i</td><td>Direct : A[i] en O(1)</td><td>Parcours depuis la tête en O(n)</td></tr>
+      <tr><td>Insérer / supprimer au milieu</td><td>Coûteux : décaler les éléments O(n)</td><td>Facile : rebrancher 2 pointeurs O(1)</td></tr>
+      <tr><td>Idéal quand</td><td>Taille connue, accès par indice fréquent</td><td>Beaucoup d'insertions/suppressions, taille variable</td></tr>
+    </table>
+
+    <!-- 5 opérations -->
+    <h2 id="operations"><span class="num">5</span> Les opérations essentielles</h2>
+
+    <h3>Insérer en tête (la plus simple, O(1))</h3>
+    <div class="code"><div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">inserer_tete.algo</span><button class="code__copy">Copier</button></div>
+      <pre><code data-raw="Procédure InsererTete(var L : Liste ; x : entier)
+Var p : Liste
+Début
+    Allouer(p)
+    p^.valeur <- x
+    p^.suivant <- L      // le nouveau pointe sur l'ancienne tête
+    L <- p               // la tête devient le nouveau nœud
+FinProcédure"></code></pre></div>
+    <div class="note note--warn"><span class="note__ic">⚠️</span><div class="note__body">
+      <strong>L'ordre des 2 dernières lignes est CRUCIAL</strong>
+      Si tu fais <code>L ← p</code> <b>avant</b> <code>p^.suivant ← L</code>, tu perds l'accès à toute l'ancienne liste (p pointerait sur lui-même). Toujours : d'abord brancher le nouveau sur l'ancienne tête, ensuite déplacer la tête.
+    </div></div>
+
+    <h3>Parcourir / afficher (O(n))</h3>
+    <div class="code"><div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">afficher.algo</span><button class="code__copy">Copier</button></div>
+      <pre><code data-raw="Procédure Afficher(L : Liste)
+Var p : Liste
+Début
+    p <- L
+    TantQue (p <> Nil) Faire
+        Ecrire(p^.valeur)
+        p <- p^.suivant      // avancer au nœud suivant
+    FinTantQue
+FinProcédure"></code></pre></div>
+
+    <h3>Supprimer la 1ʳᵉ occurrence de x</h3>
+    <div class="code"><div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">supprimer.algo</span><button class="code__copy">Copier</button></div>
+      <pre><code data-raw="Procédure Supprimer(var L : Liste ; x : entier)
+Var p, prec : Liste
+Début
+    p <- L ; prec <- Nil
+    TantQue (p <> Nil) et (p^.valeur <> x) Faire
+        prec <- p
+        p <- p^.suivant
+    FinTantQue
+    Si (p <> Nil) Alors            // trouvé
+        Si (prec = Nil) Alors
+            L <- p^.suivant        // c'était la tête
+        Sinon
+            prec^.suivant <- p^.suivant
+        FinSi
+        Liberer(p)
+    FinSi
+FinProcédure"></code></pre></div>
+    <div class="note note--exam"><span class="note__ic">🎯</span><div class="note__body">
+      <strong>Le réflexe à avoir</strong>
+      Pour supprimer (ou insérer au milieu), garde <b>toujours</b> un pointeur <code>prec</code> sur le nœud précédent : c'est lui qui doit « sauter par-dessus » le nœud retiré. Et n'oublie jamais le cas particulier de la <b>tête</b> (prec = Nil).
+    </div></div>
+
+    <!-- 6 exercices -->
+    <h2 id="exercices"><span class="num">6</span> Exercices guidés &amp; corrigés</h2>
+
+    <div class="exo">
+      <div class="exo__head"><span class="pill pill--facile">Facile</span><span class="pill pill--examen">TD4</span><h4>Longueur (récursive)</h4></div>
+      <p class="exo__statement">Écris une fonction récursive <code>Longueur(L) : entier</code>.</p>
+      <button class="btn btn--soft btn--sm exo__toggle" data-exo-toggle>▼ Voir la correction détaillée</button>
+      <div class="exo__sol">
+        <div class="exo__step"><b>Idée.</b> Liste vide → 0 ; sinon 1 + longueur du reste.</div>
+        <div class="code"><div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">longueur.algo</span><button class="code__copy">Copier</button></div>
+          <pre><code data-raw="Fonction Longueur(L : Liste) : entier
+Début
+    Si (L = Nil) Alors Retourner 0
+    Sinon Retourner 1 + Longueur(L^.suivant)
+    FinSi
+FinFonction"></code></pre></div>
+      </div>
+    </div>
+
+    <div class="exo">
+      <div class="exo__head"><span class="pill pill--moyen">Moyen</span><span class="pill pill--examen">TD4</span><h4>Maximum d'une liste</h4></div>
+      <p class="exo__statement">Écris <code>Maximum(L) : entier</code> (liste supposée non vide).</p>
+      <button class="btn btn--soft btn--sm exo__toggle" data-exo-toggle>▼ Voir la correction détaillée</button>
+      <div class="exo__sol">
+        <div class="exo__step"><b>Idée (itérative).</b> On prend le 1ᵉʳ comme max provisoire, puis on parcourt en mettant à jour.</div>
+        <div class="code"><div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">maximum.algo</span><button class="code__copy">Copier</button></div>
+          <pre><code data-raw="Fonction Maximum(L : Liste) : entier
+Var p : Liste ; m : entier
+Début
+    m <- L^.valeur
+    p <- L^.suivant
+    TantQue (p <> Nil) Faire
+        Si (p^.valeur > m) Alors m <- p^.valeur FinSi
+        p <- p^.suivant
+    FinTantQue
+    Retourner m
+FinFonction"></code></pre></div>
+      </div>
+    </div>
+
+    <div class="exo">
+      <div class="exo__head"><span class="pill pill--moyen">Moyen</span><span class="pill pill--examen">TD4</span><h4>Insérer à la position k</h4></div>
+      <p class="exo__statement">Procédure <code>Inserer_k(var L ; x ; k)</code> : insère x à la k-ième position.</p>
+      <button class="btn btn--soft btn--sm exo__toggle" data-exo-toggle>▼ Voir la correction détaillée</button>
+      <div class="exo__sol">
+        <div class="exo__step"><b>Idée.</b> Avancer jusqu'au (k-1)ᵉ nœud, puis brancher le nouveau entre lui et son suivant. Cas k=1 → insertion en tête.</div>
+        <div class="code"><div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">inserer_k.algo</span><button class="code__copy">Copier</button></div>
+          <pre><code data-raw="Procédure Inserer_k(var L : Liste ; x : entier ; k : entier)
+Var p, nouv : Liste ; i : entier
+Début
+    Allouer(nouv) ; nouv^.valeur <- x
+    Si (k = 1) Alors
+        nouv^.suivant <- L ; L <- nouv
+    Sinon
+        p <- L ; i <- 1
+        TantQue (p <> Nil) et (i < k - 1) Faire
+            p <- p^.suivant ; i <- i + 1
+        FinTantQue
+        nouv^.suivant <- p^.suivant
+        p^.suivant <- nouv
+    FinSi
+FinProcédure"></code></pre></div>
+      </div>
+    </div>
+
+    <div class="exo">
+      <div class="exo__head"><span class="pill pill--difficile">Difficile</span><span class="pill pill--examen">Examen 2025</span><h4>Supprimer tous les colis « livrés »</h4></div>
+      <p class="exo__statement">Une liste de colis avec un champ <code>statut</code>. Supprime tous les colis dont le statut est « livré ».</p>
+      <button class="btn btn--soft btn--sm exo__toggle" data-exo-toggle>▼ Voir la correction détaillée</button>
+      <div class="exo__sol">
+        <div class="exo__step"><b>Idée.</b> On parcourt avec p et prec. À chaque colis livré, on le débranche et on le libère ; sinon on avance. Attention aux suppressions en tête successives.</div>
+        <div class="code"><div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">supprimer_livres.algo</span><button class="code__copy">Copier</button></div>
+          <pre><code data-raw="Procédure SupprimerLivres(var L : Liste)
+Var p, prec, aSupp : Liste
+Début
+    p <- L ; prec <- Nil
+    TantQue (p <> Nil) Faire
+        Si (p^.statut = ""livré"") Alors
+            aSupp <- p
+            Si (prec = Nil) Alors L <- p^.suivant
+            Sinon prec^.suivant <- p^.suivant
+            FinSi
+            p <- p^.suivant
+            Liberer(aSupp)
+        Sinon
+            prec <- p ; p <- p^.suivant
+        FinSi
+    FinTantQue
+FinProcédure"></code></pre></div>
+        <div class="exo__step"><b>Piège.</b> Après suppression, ne pas avancer prec (le nœud retiré n'existe plus) ; on n'avance que p.</div>
+      </div>
+    </div>
+
+    <!-- QCM -->
+    <h2 id="qcm"><span class="num">7</span> QCM — teste-toi</h2>
+    <p>25 questions : structure, opérations, complexité, pièges de pointeurs.</p>
+    <div class="quiz" data-quiz="listes" data-time="600"></div>
+
+    <!-- résumé -->
+    <h2 id="resume"><span class="num">8</span> Mini-résumé à retenir</h2>
+    <div class="card" style="background:var(--surface-2)"><ul style="margin-top:0">
+      <li>Nœud = donnée + pointeur <code>suivant</code>. Fin de liste = <code>Nil</code>.</li>
+      <li>Insertion en tête = O(1) ; accès au i-ème / queue = O(n).</li>
+      <li>Insérer/supprimer = rebrancher des pointeurs (garder <code>prec</code> !).</li>
+      <li>Toujours gérer le cas particulier de la <b>tête</b>.</li>
+      <li>Tableau = accès direct mais taille fixe ; liste = souple mais accès séquentiel.</li>
+    </ul></div>
+
+    <div id="prevnext" style="display:flex;gap:14px;margin-top:34px;flex-wrap:wrap"></div>
+  </article>
+</div>
+
+<footer class="footer"><div class="footer__inner">
+  <div><b class="grad-text">AlgoTN</b> — Programme Algorithmique & Structures de Données, TI.</div>
+  <div>100% hors-ligne · Ta progression reste sur ton appareil.</div>
+</div></footer>
+
+<button class="iconbtn totop" title="Haut de page">↑</button>
+<div class="search-modal"><div class="search-box"><input type="text" placeholder="Rechercher un chapitre… (Échap pour fermer)"><div class="search-results"></div></div></div>
+
+<script>
+window.ALGOTN_QUIZ = [
+  { q:"Un nœud d'une liste chaînée contient :", options:["Uniquement une valeur","Une valeur + un pointeur vers le suivant","Deux valeurs","Un tableau"], answer:1, exp:"Donnée + lien (suivant) : c'est ce qui 'chaîne' la liste." },
+  { q:"Le dernier nœud a son champ suivant égal à :", options:["0","Nil","La tête","Lui-même"], answer:1, exp:"Nil marque la fin de la chaîne." },
+  { q:"La 'tête' d'une liste est :", options:["Le dernier nœud","Un pointeur vers le premier nœud","Une valeur entière","La taille"], answer:1, exp:"La tête donne accès à toute la liste." },
+  { q:"Avantage principal d'une liste sur un tableau :", options:["Accès direct par indice","Taille dynamique + insertion/suppression faciles","Moins de mémoire toujours","Plus rapide à parcourir"], answer:1, exp:"Elle grandit à la demande et se réorganise par pointeurs." },
+  { q:"Accéder au i-ème élément d'une liste chaînée coûte :", options:["O(1)","O(n) (parcours depuis la tête)","O(log n)","Gratuit"], answer:1, exp:"Pas d'indice direct : il faut suivre les liens un par un." },
+  { q:"Insérer en tête coûte :", options:["O(n)","O(1)","O(log n)","O(n²)"], answer:1, exp:"On rebranche juste 2 pointeurs, quelle que soit la taille." },
+  { q:"Pour avancer au nœud suivant pendant un parcours :", options:["p ← p + 1","p ← p^.suivant","p ← L","p^ ← p"], answer:1, exp:"On suit le pointeur 'suivant'." },
+  { q:"Condition d'arrêt d'un parcours de liste :", options:["p = 0","p = Nil","p^ = 0","i > 100"], answer:1, exp:"On s'arrête quand p ne pointe plus sur un nœud." },
+  { q:"En insertion en tête, l'ordre correct est :", options:["L ← p puis p^.suivant ← L","p^.suivant ← L puis L ← p","peu importe","p^.suivant ← p"], answer:1, exp:"D'abord brancher sur l'ancienne tête, ensuite déplacer la tête." },
+  { q:"Pour supprimer un nœud au milieu, il faut connaître :", options:["Seulement le nœud à supprimer","Le nœud précédent (prec)","La queue","La longueur"], answer:1, exp:"prec doit 'sauter par-dessus' le nœud retiré." },
+  { q:"Après avoir débranché un nœud, on doit :", options:["L'ignorer","Le Liberer","Le copier","Le déplacer en tête"], answer:1, exp:"Sinon fuite mémoire." },
+  { q:"La définition d'un nœud est dite :", options:["Itérative","Récursive (il pointe vers un nœud)","Statique","Linéaire"], answer:1, exp:"Un nœud référence un autre nœud → structure auto-similaire." },
+  { q:"Insérer en queue (sans pointeur de fin) coûte :", options:["O(1)","O(n) (parcours jusqu'au dernier)","O(log n)","impossible"], answer:1, exp:"Il faut atteindre le nœud dont suivant = Nil." },
+  { q:"Pourquoi un centre de livraison choisirait une liste plutôt qu'un tableau pour des colis ?", options:["Nombre de colis variable, insertions/suppressions fréquentes","Pour économiser le CPU","Pour trier plus vite","Les tableaux sont interdits"], answer:0, exp:"File de colis qui change tout le temps → structure dynamique idéale." },
+  { q:"Une liste vide est représentée par :", options:["Un nœud à 0","tête = Nil","Un tableau vide","La queue"], answer:1, exp:"Aucun nœud : la tête pointe sur rien." },
+  { q:"Pour calculer la longueur récursivement, le cas de base est :", options:["L = Nil → 0","L = 1","p^ = 0","longueur = 100"], answer:0, exp:"Liste vide → longueur 0." },
+  { q:"p^.valeur signifie :", options:["L'adresse du nœud","Le champ valeur du nœud pointé par p","Le nœud suivant","La tête"], answer:1, exp:"On déréférence p puis on lit le champ valeur." },
+  { q:"Mémoire d'une liste chaînée :", options:["Bloc contigu","Nœuds éparpillés reliés par pointeurs","Sur le disque","Toujours 100 cases"], answer:1, exp:"Chaque nœud peut être n'importe où ; les pointeurs les relient." },
+  { q:"Insérer au milieu d'un tableau coûte :", options:["O(1)","O(n) (décalage des éléments)","O(log n)","Gratuit"], answer:1, exp:"Il faut décaler tous les éléments suivants." },
+  { q:"Pour supprimer la tête, on fait :", options:["L ← L^.suivant (puis Liberer l'ancienne)","prec^.suivant ← Nil","L ← Nil","rien"], answer:0, exp:"La nouvelle tête est le 2ème nœud ; on libère l'ancienne." },
+  { q:"Une liste doublement chaînée a, en plus, un pointeur :", options:["vers la valeur","vers le précédent","vers la tête","vers Nil"], answer:1, exp:"Chaque nœud connaît son précédent ET son suivant." },
+  { q:"Trier une liste chaînée par tri à bulles consiste à :", options:["Échanger des pointeurs uniquement","Comparer les valeurs voisines et les permuter (souvent via une variable d'aide)","Recopier dans un tableau","Impossible"], answer:1, exp:"On compare valeurs adjacentes et on les échange jusqu'à l'ordre voulu." },
+  { q:"Risque si on perd la tête (pointeur) d'une liste :", options:["Rien","On perd l'accès à toute la liste (fuite)","La liste se trie","Elle double"], answer:1, exp:"Sans la tête, plus aucun moyen d'atteindre les nœuds." },
+  { q:"Calculer le poids total des colis en attente, c'est :", options:["Un accès direct","Un parcours en accumulant les poids des nœuds 'en attente'","Un tri","Une recherche dichotomique"], answer:1, exp:"On somme en filtrant sur le statut pendant le parcours." },
+  { q:"Quand préférer un tableau à une liste ?", options:["Taille connue + accès par indice fréquent","Insertions/suppressions constantes","Taille très variable","Jamais"], answer:0, exp:"Le tableau brille pour l'accès direct A[i] quand la taille est stable." }
+];
+</script>
+<script src="../js/data.js"></script>
+<script src="../js/app.js"></script>
+<script src="../js/quiz.js"></script>
+<script src="../js/chapter.js"></script>
+<script src="../js/visualizers/linkedlist.js"></script>
+</body>
+</html>
