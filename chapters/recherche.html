@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La recherche — AlgoTN</title>
+<meta name="description" content="Recherche séquentielle vs dichotomique : principe, conditions, complexité, avec visualiseur animé comparatif.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%23a855f7'/><text x='50' y='72' font-size='52' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold'>⌕</text></svg>">
+<link rel="stylesheet" href="../css/theme.css"><link rel="stylesheet" href="../css/main.css">
+</head>
+<body data-chapter="recherche">
+<div class="readbar"></div>
+<header class="topbar"><div class="topbar__inner">
+  <button class="iconbtn menu-toggle" title="Menu">☰</button>
+  <a class="brand" href="../index.html"><span class="brand__logo">A</span><span>AlgoTN <small>Algorithmique · TI</small></span></a>
+  <nav><a href="../index.html">Accueil</a><a href="../index.html#chapitres" class="active">Chapitres</a><a href="../pages/revision.html">Révision</a><a href="../pages/exercices.html">Exercices</a></nav>
+  <span class="topbar__spacer"></span>
+  <button class="iconbtn" data-search-open title="Rechercher (Ctrl+K)">🔍</button>
+  <button class="iconbtn" data-theme-toggle title="Thème"><span data-theme-icon>🌙</span></button>
+</div></header>
+<div class="layout">
+  <aside class="sidebar">
+    <h4>Chapitres</h4><nav id="chap-nav"></nav>
+    <h4>Dans ce chapitre</h4><nav class="toc" id="toc"></nav>
+    <button class="btn btn--soft btn--sm" id="fav-btn" style="margin-top:14px;width:100%">☆ Mettre en favori</button>
+  </aside>
+  <article class="article">
+    <div class="crumbs"><a href="../index.html">Accueil</a> › <a href="../index.html#chapitres">Chapitres</a> › <span>Recherche</span></div>
+    <span class="lead-chip" style="margin-top:14px">⌕ La recherche</span>
+    <h1 style="margin-top:12px">Trouver une aiguille… vite</h1>
+    <p class="lead muted">Chercher si une valeur est dans un tableau, ça semble trivial : on regarde partout. Mais si le tableau est <b>trié</b>, on peut être radicalement plus malin — comme on cherche un mot dans un dictionnaire sans lire toutes les pages.</p>
+
+    <h2 id="sequentielle"><span class="num">1</span> Recherche séquentielle</h2>
+    <p>La plus simple : on teste chaque case, une par une, jusqu'à trouver (ou arriver au bout). Marche sur n'importe quel tableau, trié ou non.</p>
+    <div class="code"><div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">sequentielle.algo</span><button class="code__copy">Copier</button></div>
+      <pre><code data-raw="Fonction RechSeq(T : Tableau[0..n-1] de entier ; n, x : entier) : entier
+Var i : entier
+Début
+    Pour i De 0 À n-1 Faire
+        Si (T[i] = x) Alors Retourner i FinSi   // trouvé : on renvoie la position
+    FinPour
+    Retourner -1     // pas trouvé
+FinFonction"></code></pre></div>
+    <div class="note note--intui"><span class="note__ic">🐢</span><div class="note__body"><strong>Coût.</strong> Dans le pire cas (absent ou en dernier), on teste les n cases : c'est du <b>O(n)</b>. Pour un petit tableau ou non trié, c'est parfait.</div></div>
+
+    <h2 id="dichotomique"><span class="num">2</span> Recherche dichotomique (tableau trié)</h2>
+    <p>Si le tableau est <b>trié</b>, on regarde le milieu : trop grand ? on ignore toute la moitié droite. Trop petit ? on ignore la gauche. À chaque test, on <b>élimine la moitié</b> du tableau.</p>
+    <div class="code"><div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">dichotomique.algo</span><button class="code__copy">Copier</button></div>
+      <pre><code data-raw="Fonction RechDicho(T : Tableau[0..n-1] de entier ; n, x : entier) : entier
+Var g, d, m : entier
+Début
+    g <- 0 ; d <- n - 1
+    TantQue (g <= d) Faire
+        m <- (g + d) div 2
+        Si (T[m] = x) Alors Retourner m
+        Sinon Si (T[m] < x) Alors g <- m + 1   // chercher à droite
+        Sinon d <- m - 1                        // chercher à gauche
+        FinSi
+    FinTantQue
+    Retourner -1
+FinFonction"></code></pre></div>
+    <div class="note note--tip"><span class="note__ic">⚡</span><div class="note__body"><strong>Coût.</strong> On divise par 2 à chaque étape : <b>O(log n)</b>. Pour 1 000 000 d'éléments, ~20 tests suffisent (vs 1 000 000 en séquentiel) ! Mais <b>condition impérative</b> : le tableau DOIT être trié.</div></div>
+
+    <h2 id="visualiseur"><span class="num">3</span> Visualiseur comparatif</h2>
+    <p>Compare les deux méthodes sur le même tableau trié. Compte les étapes : la dichotomie en fait beaucoup moins.</p>
+    <div data-viz-search></div>
+
+    <h2 id="comparaison"><span class="num">4</span> Laquelle choisir ?</h2>
+    <table class="cmp">
+      <tr><th></th><th>Séquentielle</th><th>Dichotomique</th></tr>
+      <tr><td>Tableau trié requis ?</td><td>Non</td><td>Oui (obligatoire)</td></tr>
+      <tr><td>Complexité</td><td>O(n)</td><td>O(log n)</td></tr>
+      <tr><td>Simplicité</td><td>Très simple</td><td>Un peu plus subtile</td></tr>
+      <tr><td>Idéale quand</td><td>Petit/non trié</td><td>Grand tableau trié</td></tr>
+    </table>
+
+    <h2 id="erreurs"><span class="num">5</span> Erreurs fréquentes</h2>
+    <ul>
+      <li>Appliquer la dichotomie sur un tableau <b>non trié</b> (résultat faux).</li>
+      <li>Mauvaise mise à jour de g/d (boucle infinie ou cas manqués).</li>
+      <li>Oublier de renvoyer −1 quand l'élément est absent.</li>
+      <li>Erreur sur <code>m = (g+d) div 2</code> (bornes inclusives g ≤ d).</li>
+    </ul>
+    <div class="note note--exam"><span class="note__ic">🎯</span><div class="note__body"><strong>Astuce examen.</strong> Si l'énoncé dit « tableau trié », pense immédiatement dichotomie et mentionne O(log n). Sinon séquentielle O(n). Renvoyer la <b>position</b> (ou −1) est souvent attendu.</div></div>
+
+    <h2 id="qcm"><span class="num">6</span> QCM</h2>
+    <div class="quiz" data-quiz="recherche" data-time="420"></div>
+
+    <h2 id="resume"><span class="num">7</span> Mini-résumé</h2>
+    <div class="card" style="background:var(--surface-2)"><ul style="margin-top:0">
+      <li>Séquentielle : teste tout, O(n), marche partout.</li>
+      <li>Dichotomique : coupe en deux, O(log n), tableau trié obligatoire.</li>
+      <li>Renvoie la position trouvée, ou −1 si absent.</li>
+      <li>Trié + grand ⟹ dichotomie ; sinon séquentielle.</li>
+    </ul></div>
+    <div id="prevnext" style="display:flex;gap:14px;margin-top:34px;flex-wrap:wrap"></div>
+  </article>
+</div>
+<footer class="footer"><div class="footer__inner"><div><b class="grad-text">AlgoTN</b> — Programme Algorithmique & Structures de Données, TI.</div><div>100% hors-ligne · Ta progression reste sur ton appareil.</div></div></footer>
+<button class="iconbtn totop" title="Haut de page">↑</button>
+<div class="search-modal"><div class="search-box"><input type="text" placeholder="Rechercher… (Échap pour fermer)"><div class="search-results"></div></div></div>
+<script>
+window.ALGOTN_QUIZ = [
+  { q:"La recherche séquentielle :", options:["Exige un tableau trié","Teste les cases une par une","Coupe en deux","Est en O(log n)"], answer:1, exp:"On parcourt jusqu'à trouver." },
+  { q:"Complexité de la recherche séquentielle (pire cas) :", options:["O(1)","O(n)","O(log n)","O(n²)"], answer:1, exp:"On peut tester les n cases." },
+  { q:"La recherche dichotomique exige :", options:["Un tableau trié","Un tableau non trié","Une liste chaînée","Une pile"], answer:0, exp:"Sinon le découpage par moitié est faux." },
+  { q:"Complexité de la dichotomie :", options:["O(n)","O(log n)","O(1)","O(n²)"], answer:1, exp:"On divise par 2 à chaque étape." },
+  { q:"À chaque étape, la dichotomie élimine :", options:["Un élément","La moitié du tableau","Rien","Tout"], answer:1, exp:"D'où la rapidité logarithmique." },
+  { q:"Si T[m] < x (dichotomie), on cherche :", options:["À gauche","À droite (g ← m+1)","On s'arrête","Au milieu"], answer:1, exp:"La valeur est plus grande → moitié droite." },
+  { q:"Si T[m] > x, on fait :", options:["g ← m+1","d ← m-1 (moitié gauche)","Retourner m","Rien"], answer:1, exp:"On garde la partie gauche." },
+  { q:"Quand l'élément est absent, on renvoie :", options:["0","-1 (convention)","La taille","Nil"], answer:1, exp:"Convention courante pour 'non trouvé'." },
+  { q:"Pour 1 000 000 d'éléments triés, la dichotomie fait environ :", options:["1 000 000 tests","~20 tests","500 000 tests","1 test"], answer:1, exp:"log2(10^6) ≈ 20." },
+  { q:"Appliquer la dichotomie sur un tableau non trié :", options:["Marche","Donne un résultat faux","Est plus rapide","Trie d'abord"], answer:1, exp:"L'hypothèse de tri est cassée." },
+  { q:"Le milieu se calcule :", options:["g * d","(g + d) div 2","g - d","d - g"], answer:1, exp:"Indice du milieu entre g et d." },
+  { q:"La séquentielle marche sur :", options:["Trié uniquement","N'importe quel tableau","Une pile seulement","Rien"], answer:1, exp:"Aucune condition d'ordre." },
+  { q:"Condition de boucle de la dichotomie :", options:["g < d","g <= d","g > d","g = d"], answer:1, exp:"Avec bornes inclusives, tant que g ≤ d." },
+  { q:"Pour un petit tableau non trié, on préfère :", options:["Dichotomie","Séquentielle","Trier puis dichotomie toujours","Aucune"], answer:1, exp:"Simple et suffisant." },
+  { q:"Avantage de renvoyer la position :", options:["Inutile","Permet d'accéder ensuite à l'élément","Trie le tableau","Réduit la mémoire"], answer:1, exp:"On sait OÙ se trouve la valeur." }
+];
+</script>
+<script src="../js/data.js"></script><script src="../js/app.js"></script><script src="../js/quiz.js"></script><script src="../js/chapter.js"></script><script src="../js/visualizers/core.js"></script>
+</body></html>

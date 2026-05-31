@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Les boucles — AlgoTN</title>
+<meta name="description" content="POUR, TANT QUE, RÉPÉTER : répéter des instructions, avec visualiseur d'itérations animé.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%2306b6d4'/><text x='50' y='72' font-size='52' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold'>↻</text></svg>">
+<link rel="stylesheet" href="../css/theme.css"><link rel="stylesheet" href="../css/main.css">
+</head>
+<body data-chapter="boucles">
+<div class="readbar"></div>
+<header class="topbar"><div class="topbar__inner">
+  <button class="iconbtn menu-toggle" title="Menu">☰</button>
+  <a class="brand" href="../index.html"><span class="brand__logo">A</span><span>AlgoTN <small>Algorithmique · TI</small></span></a>
+  <nav><a href="../index.html">Accueil</a><a href="../index.html#chapitres" class="active">Chapitres</a><a href="../pages/revision.html">Révision</a><a href="../pages/exercices.html">Exercices</a></nav>
+  <span class="topbar__spacer"></span>
+  <button class="iconbtn" data-search-open title="Rechercher (Ctrl+K)">🔍</button>
+  <button class="iconbtn" data-theme-toggle title="Thème"><span data-theme-icon>🌙</span></button>
+</div></header>
+<div class="layout">
+  <aside class="sidebar">
+    <h4>Chapitres</h4><nav id="chap-nav"></nav>
+    <h4>Dans ce chapitre</h4><nav class="toc" id="toc"></nav>
+    <button class="btn btn--soft btn--sm" id="fav-btn" style="margin-top:14px;width:100%">☆ Mettre en favori</button>
+  </aside>
+  <article class="article">
+    <div class="crumbs"><a href="../index.html">Accueil</a> › <a href="../index.html#chapitres">Chapitres</a> › <span>Boucles</span></div>
+    <span class="lead-chip" style="margin-top:14px">↻ Les boucles</span>
+    <h1 style="margin-top:12px">Répéter sans se répéter</h1>
+    <p class="lead muted">Imagine devoir afficher « Bonjour » 100 fois. Tu ne vas pas écrire 100 lignes ! Une boucle dit « refais ça tant qu'il le faut ». C'est le vrai super-pouvoir de l'algorithmique.</p>
+
+    <h2 id="trois"><span class="num">1</span> Les 3 boucles</h2>
+    <table class="cmp">
+      <tr><th>Boucle</th><th>Quand l'utiliser</th><th>Test</th></tr>
+      <tr><td><b>POUR</b></td><td>Nombre de tours <b>connu</b> à l'avance</td><td>Compteur géré automatiquement</td></tr>
+      <tr><td><b>TANT QUE</b></td><td>Nombre de tours <b>inconnu</b> ; test <b>avant</b></td><td>Peut ne jamais s'exécuter</td></tr>
+      <tr><td><b>RÉPÉTER</b></td><td>Test <b>après</b> ; s'exécute <b>au moins une fois</b></td><td>Idéal pour les saisies à valider</td></tr>
+    </table>
+
+    <h2 id="syntaxe"><span class="num">2</span> Syntaxe</h2>
+    <div class="code"><div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">boucles.algo</span><button class="code__copy">Copier</button></div>
+      <pre><code data-raw="Pour i De 1 À n Faire
+    Ecrire(i)
+FinPour
+
+TantQue (x > 0) Faire
+    x <- x - 1
+FinTantQue
+
+Répéter
+    Lire(n)
+Jusqu'à (n > 0)"></code></pre></div>
+    <div class="note note--intui"><span class="note__ic">🔁</span><div class="note__body"><strong>POUR = TANT QUE déguisé.</strong> <code>Pour i De 1 À n</code> revient à : i←1 ; tant que i≤n { … ; i←i+1 }. Le POUR gère juste le compteur pour toi.</div></div>
+
+    <h2 id="visualiseur"><span class="num">3</span> Loop Visualizer</h2>
+    <p>Choisis un type de boucle, fixe n, et regarde le compteur grimper, la condition se tester et la somme s'accumuler à chaque tour.</p>
+    <div data-viz-loops></div>
+
+    <h2 id="accumulateur"><span class="num">4</span> Le motif « accumulateur »</h2>
+    <p>Le schéma le plus utile : une variable qu'on met à jour à chaque tour (somme, produit, compteur, max…). On l'<b>initialise avant</b> la boucle.</p>
+    <div class="code"><div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">somme.algo</span><button class="code__copy">Copier</button></div>
+      <pre><code data-raw="s <- 0                  // initialiser (0 pour une somme, 1 pour un produit)
+Pour i De 1 À n Faire
+    s <- s + i          // accumuler
+FinPour
+Ecrire(s)"></code></pre></div>
+
+    <h2 id="erreurs"><span class="num">5</span> Erreurs fréquentes</h2>
+    <ul>
+      <li><b>Boucle infinie</b> : la condition d'arrêt n'est jamais atteinte (oubli d'incrémenter).</li>
+      <li>Oublier d'<b>initialiser</b> l'accumulateur avant la boucle.</li>
+      <li>Erreur de <b>bornes</b> (« décalage d'un » : commencer à 0 ou 1, finir à n ou n−1).</li>
+      <li>Choisir TANT QUE alors qu'il faut RÉPÉTER (saisie à exécuter au moins une fois).</li>
+    </ul>
+    <div class="note note--exam"><span class="note__ic">🎯</span><div class="note__body"><strong>Astuce examen.</strong> « Lire jusqu'à une valeur correcte » ⟹ RÉPÉTER (test après). « Parcourir un tableau de n cases » ⟹ POUR. « Tant qu'il reste un nœud » ⟹ TANT QUE.</div></div>
+
+    <h2 id="exercices"><span class="num">6</span> Exercices corrigés</h2>
+    <div class="exo"><div class="exo__head"><span class="pill pill--facile">Facile</span><h4>Factorielle (itérative)</h4></div>
+      <p class="exo__statement">Calculer n! avec une boucle.</p>
+      <button class="btn btn--soft btn--sm exo__toggle" data-exo-toggle>▼ Voir la correction</button>
+      <div class="exo__sol"><div class="exo__step"><b>Idée.</b> Accumulateur produit, initialisé à 1.</div><div class="code"><div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">factorielle.algo</span><button class="code__copy">Copier</button></div>
+        <pre><code data-raw="r <- 1
+Pour i De 2 À n Faire
+    r <- r * i
+FinPour
+Ecrire(r)"></code></pre></div></div></div>
+    <div class="exo"><div class="exo__head"><span class="pill pill--moyen">Moyen</span><h4>Saisie validée</h4></div>
+      <p class="exo__statement">Demander un nombre entre 1 et 10 jusqu'à ce que la saisie soit correcte.</p>
+      <button class="btn btn--soft btn--sm exo__toggle" data-exo-toggle>▼ Voir la correction</button>
+      <div class="exo__sol"><div class="exo__step"><b>Idée.</b> RÉPÉTER : on lit au moins une fois, on recommence tant que c'est hors bornes.</div><div class="code"><div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">saisie.algo</span><button class="code__copy">Copier</button></div>
+        <pre><code data-raw="Répéter
+    Ecrire(""Entre un nombre entre 1 et 10 :"")
+    Lire(n)
+Jusqu'à (n >= 1) et (n <= 10)"></code></pre></div></div></div>
+
+    <h2 id="qcm"><span class="num">7</span> QCM</h2>
+    <div class="quiz" data-quiz="boucles" data-time="420"></div>
+
+    <h2 id="resume"><span class="num">8</span> Mini-résumé</h2>
+    <div class="card" style="background:var(--surface-2)"><ul style="margin-top:0">
+      <li>POUR = nombre de tours connu ; TANT QUE = test avant ; RÉPÉTER = test après (≥1 tour).</li>
+      <li>Accumulateur : initialiser AVANT, mettre à jour DANS la boucle.</li>
+      <li>Boucle infinie = condition d'arrêt jamais atteinte.</li>
+      <li>Attention aux bornes (0..n−1 vs 1..n).</li>
+    </ul></div>
+    <div id="prevnext" style="display:flex;gap:14px;margin-top:34px;flex-wrap:wrap"></div>
+  </article>
+</div>
+<footer class="footer"><div class="footer__inner"><div><b class="grad-text">AlgoTN</b> — Programme Algorithmique & Structures de Données, TI.</div><div>100% hors-ligne · Ta progression reste sur ton appareil.</div></div></footer>
+<button class="iconbtn totop" title="Haut de page">↑</button>
+<div class="search-modal"><div class="search-box"><input type="text" placeholder="Rechercher… (Échap pour fermer)"><div class="search-results"></div></div></div>
+<script>
+window.ALGOTN_QUIZ = [
+  { q:"Quelle boucle pour un nombre de tours connu ?", options:["TANT QUE","POUR","RÉPÉTER","Aucune"], answer:1, exp:"POUR gère un compteur de borne à borne." },
+  { q:"RÉPÉTER…JUSQU'À s'exécute :", options:["0 fois minimum","Au moins 1 fois (test après)","Jamais","À l'infini"], answer:1, exp:"Le test est à la fin : au moins un passage." },
+  { q:"TANT QUE teste la condition :", options:["Après le bloc","Avant le bloc","Au milieu","Jamais"], answer:1, exp:"Si fausse dès le départ, le bloc n'est pas exécuté." },
+  { q:"Une boucle infinie survient si :", options:["On initialise l'accumulateur","La condition d'arrêt n'est jamais atteinte","On utilise POUR","n = 0"], answer:1, exp:"Oubli d'incrémenter, par exemple." },
+  { q:"Pour une somme, on initialise l'accumulateur à :", options:["1","0","n","Nil"], answer:1, exp:"0 est l'élément neutre de l'addition." },
+  { q:"Pour un produit, on initialise à :", options:["0","1","n","-1"], answer:1, exp:"1 est l'élément neutre de la multiplication." },
+  { q:"Pour i De 1 À n équivaut à :", options:["i←1 ; tant que i≤n {…; i←i+1}","une seule exécution","i←n","un SI"], answer:0, exp:"Le POUR cache la gestion du compteur." },
+  { q:"« Lire jusqu'à une valeur valide » se fait avec :", options:["POUR","RÉPÉTER","SELON","rien"], answer:1, exp:"On lit au moins une fois puis on valide." },
+  { q:"Parcourir un tableau de n cases :", options:["RÉPÉTER","POUR i De 0 À n-1","SI","TANT QUE i<0"], answer:1, exp:"Nombre de tours connu = n." },
+  { q:"Erreur de 'décalage d'un' concerne :", options:["Les types","Les bornes (0..n-1 vs 1..n)","Les pointeurs","Les chaînes"], answer:1, exp:"Très classique : mal choisir début/fin." },
+  { q:"Oublier d'initialiser l'accumulateur donne :", options:["0 garanti","Un résultat faux/indéterminé","Une boucle infinie","Rien"], answer:1, exp:"Il part d'une valeur inconnue." },
+  { q:"Le 'compteur' d'une boucle POUR :", options:["Reste fixe","Augmente (ou diminue avec Pas) à chaque tour","Est aléatoire","N'existe pas"], answer:1, exp:"Il avance jusqu'à la borne." },
+  { q:"Combien de fois s'exécute : Pour i De 3 À 7 ?", options:["4","5","7","3"], answer:1, exp:"3,4,5,6,7 = 5 tours." },
+  { q:"TANT QUE peut s'exécuter 0 fois si :", options:["La condition est fausse d'emblée","n>0","Toujours","Jamais"], answer:0, exp:"Test avant : condition fausse → 0 passage." },
+  { q:"Imbriquer deux boucles sert surtout à :", options:["Lire une variable","Parcourir un tableau 2D / matrices","Faire un SI","Déclarer"], answer:1, exp:"Une boucle par dimension." }
+];
+</script>
+<script src="../js/data.js"></script><script src="../js/app.js"></script><script src="../js/quiz.js"></script><script src="../js/chapter.js"></script><script src="../js/visualizers/core.js"></script>
+</body></html>

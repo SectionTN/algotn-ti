@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Les tableaux — AlgoTN</title>
+<meta name="description" content="Tableaux 1D et 2D : indices, parcours, recherche, modification, avec Array Visualizer interactif.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%2310b981'/><text x='50' y='72' font-size='52' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold'>▦</text></svg>">
+<link rel="stylesheet" href="../css/theme.css"><link rel="stylesheet" href="../css/main.css">
+</head>
+<body data-chapter="tableaux">
+<div class="readbar"></div>
+<header class="topbar"><div class="topbar__inner">
+  <button class="iconbtn menu-toggle" title="Menu">☰</button>
+  <a class="brand" href="../index.html"><span class="brand__logo">A</span><span>AlgoTN <small>Algorithmique · TI</small></span></a>
+  <nav><a href="../index.html">Accueil</a><a href="../index.html#chapitres" class="active">Chapitres</a><a href="../pages/revision.html">Révision</a><a href="../pages/exercices.html">Exercices</a></nav>
+  <span class="topbar__spacer"></span>
+  <button class="iconbtn" data-search-open title="Rechercher (Ctrl+K)">🔍</button>
+  <button class="iconbtn" data-theme-toggle title="Thème"><span data-theme-icon>🌙</span></button>
+</div></header>
+<div class="layout">
+  <aside class="sidebar">
+    <h4>Chapitres</h4><nav id="chap-nav"></nav>
+    <h4>Dans ce chapitre</h4><nav class="toc" id="toc"></nav>
+    <button class="btn btn--soft btn--sm" id="fav-btn" style="margin-top:14px;width:100%">☆ Mettre en favori</button>
+  </aside>
+  <article class="article">
+    <div class="crumbs"><a href="../index.html">Accueil</a> › <a href="../index.html#chapitres">Chapitres</a> › <span>Tableaux</span></div>
+    <span class="lead-chip" style="margin-top:14px">▦ Les tableaux</span>
+    <h1 style="margin-top:12px">Plusieurs valeurs, un seul nom</h1>
+    <p class="lead muted">Tu as 30 notes d'étudiants. Tu ne vas pas créer note1, note2, …, note30 ! Un tableau range toutes ces valeurs sous un seul nom, chacune repérée par un <b>indice</b>. C'est la structure de données la plus fondamentale.</p>
+
+    <h2 id="definition"><span class="num">1</span> C'est quoi un tableau ?</h2>
+    <p>Une suite de cases <b>contiguës</b>, toutes du <b>même type</b>, numérotées par un indice. On accède à la i-ème case avec <code>T[i]</code>.</p>
+    <div class="code"><div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">declaration.algo</span><button class="code__copy">Copier</button></div>
+      <pre><code data-raw="Var T : Tableau[0..5] de entier   // 6 cases : T[0] à T[5]
+Début
+    T[0] <- 4
+    T[2] <- 15
+    Ecrire(T[2])   // affiche 15
+Fin"></code></pre></div>
+    <div class="note note--tip"><span class="note__ic">⚡</span><div class="note__body"><strong>Accès direct = ultra rapide.</strong> Lire ou écrire T[i] coûte le même temps quel que soit i : c'est du O(1). C'est le grand avantage du tableau sur la liste chaînée.</div></div>
+
+    <h2 id="visualiseur"><span class="num">2</span> Array Visualizer</h2>
+    <p>Accède à une case par son indice, modifie-la, cherche une valeur, parcours tout le tableau. Observe les indices et les valeurs.</p>
+    <div data-viz-array></div>
+
+    <h2 id="parcours"><span class="num">3</span> Le parcours (le réflexe n°1)</h2>
+    <p>Presque tout sur un tableau = un parcours avec une boucle POUR, de l'indice 0 à n−1.</p>
+    <div class="code"><div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">parcours.algo</span><button class="code__copy">Copier</button></div>
+      <pre><code data-raw="Pour i De 0 À n-1 Faire
+    Ecrire(T[i])
+FinPour"></code></pre></div>
+
+    <h2 id="deux-d"><span class="num">4</span> Tableaux 2D (matrices)</h2>
+    <p>Un tableau à deux dimensions = une grille (lignes × colonnes). On accède avec deux indices : <code>M[i][j]</code>. Pour le parcourir : <b>deux boucles imbriquées</b>.</p>
+    <div class="code"><div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">matrice.algo</span><button class="code__copy">Copier</button></div>
+      <pre><code data-raw="Var M : Tableau[0..2][0..2] de entier
+Début
+    Pour i De 0 À 2 Faire
+        Pour j De 0 À 2 Faire
+            Ecrire(M[i][j])
+        FinPour
+    FinPour
+Fin"></code></pre></div>
+
+    <h2 id="erreurs"><span class="num">5</span> Erreurs fréquentes</h2>
+    <ul>
+      <li><b>Dépassement d'indice</b> : accéder à T[n] alors que le dernier valide est T[n−1].</li>
+      <li>Confondre l'<b>indice</b> (la position) et la <b>valeur</b> (le contenu).</li>
+      <li>Oublier que les indices commencent souvent à 0.</li>
+      <li>Pour une matrice : inverser lignes et colonnes.</li>
+    </ul>
+    <div class="note note--exam"><span class="note__ic">🎯</span><div class="note__body"><strong>Astuce examen.</strong> Pour chercher le max : <code>max ← T[0]</code> puis parcourir de 1 à n−1. Pour compter : un accumulateur incrémenté quand la condition est vraie. Pour la somme/moyenne : accumulateur initialisé à 0.</div></div>
+
+    <h2 id="exercices"><span class="num">6</span> Exercices corrigés</h2>
+    <div class="exo"><div class="exo__head"><span class="pill pill--facile">Facile</span><h4>Maximum d'un tableau</h4></div>
+      <p class="exo__statement">Trouver la plus grande valeur d'un tableau de n entiers.</p>
+      <button class="btn btn--soft btn--sm exo__toggle" data-exo-toggle>▼ Voir la correction</button>
+      <div class="exo__sol"><div class="code"><div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">max.algo</span><button class="code__copy">Copier</button></div>
+        <pre><code data-raw="max <- T[0]
+Pour i De 1 À n-1 Faire
+    Si (T[i] > max) Alors max <- T[i] FinSi
+FinPour
+Ecrire(max)"></code></pre></div></div></div>
+    <div class="exo"><div class="exo__head"><span class="pill pill--moyen">Moyen</span><span class="pill pill--examen">TD3</span><h4>Inverser l'ordre d'un tableau</h4></div>
+      <p class="exo__statement">Ranger les éléments dans l'ordre inverse (avec une variable d'aide).</p>
+      <button class="btn btn--soft btn--sm exo__toggle" data-exo-toggle>▼ Voir la correction</button>
+      <div class="exo__sol"><div class="exo__step"><b>Piège.</b> Boucler jusqu'à n/2, sinon on ré-inverse !</div><div class="code"><div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">inverser.algo</span><button class="code__copy">Copier</button></div>
+        <pre><code data-raw="Pour i De 0 À (n div 2) - 1 Faire
+    aux <- T[i]
+    T[i] <- T[n-1-i]
+    T[n-1-i] <- aux
+FinPour"></code></pre></div></div></div>
+
+    <h2 id="qcm"><span class="num">7</span> QCM</h2>
+    <div class="quiz" data-quiz="tableaux" data-time="420"></div>
+
+    <h2 id="resume"><span class="num">8</span> Mini-résumé</h2>
+    <div class="card" style="background:var(--surface-2)"><ul style="margin-top:0">
+      <li>Tableau = cases contiguës, même type, repérées par indice.</li>
+      <li>Accès direct T[i] en O(1) ; taille fixe.</li>
+      <li>Parcours = boucle POUR de 0 à n−1.</li>
+      <li>2D = deux indices, deux boucles imbriquées.</li>
+      <li>Attention au dépassement d'indice (T[n] interdit).</li>
+    </ul></div>
+    <div id="prevnext" style="display:flex;gap:14px;margin-top:34px;flex-wrap:wrap"></div>
+  </article>
+</div>
+<footer class="footer"><div class="footer__inner"><div><b class="grad-text">AlgoTN</b> — Programme Algorithmique & Structures de Données, TI.</div><div>100% hors-ligne · Ta progression reste sur ton appareil.</div></div></footer>
+<button class="iconbtn totop" title="Haut de page">↑</button>
+<div class="search-modal"><div class="search-box"><input type="text" placeholder="Rechercher… (Échap pour fermer)"><div class="search-results"></div></div></div>
+<script>
+window.ALGOTN_QUIZ = [
+  { q:"Un tableau contient des éléments :", options:["De types différents","Du même type","Toujours des chaînes","Sans type"], answer:1, exp:"Toutes les cases partagent le même type." },
+  { q:"T[i] désigne :", options:["L'indice i","La case d'indice i","La taille","Le type"], answer:1, exp:"On accède à la case par son indice." },
+  { q:"L'accès à T[i] coûte :", options:["O(n)","O(1) (direct)","O(log n)","O(n²)"], answer:1, exp:"Accès direct par calcul d'adresse." },
+  { q:"Si T a 6 cases [0..5], T[6] est :", options:["La dernière","Un dépassement d'indice (erreur)","Vide","= T[0]"], answer:1, exp:"Le dernier indice valide est 5." },
+  { q:"Pour parcourir n cases (base 0) :", options:["Pour i De 1 À n","Pour i De 0 À n-1","Pour i De 0 À n","RÉPÉTER"], answer:1, exp:"De 0 à n-1 couvre toutes les cases." },
+  { q:"La taille d'un tableau classique est :", options:["Dynamique","Fixe (définie à la déclaration)","Infinie","Toujours 10"], answer:1, exp:"Tableau = taille fixe." },
+  { q:"Indice vs valeur :", options:["Identiques","Indice = position, valeur = contenu","Indice = contenu","Aucun sens"], answer:1, exp:"Ne pas confondre la position et ce qu'elle contient." },
+  { q:"Un tableau 2D se parcourt avec :", options:["Une boucle","Deux boucles imbriquées","Un SI","Aucune boucle"], answer:1, exp:"Une boucle par dimension." },
+  { q:"M[i][j] : i et j sont :", options:["Deux valeurs","Ligne et colonne","La taille","Des pointeurs"], answer:1, exp:"i = ligne, j = colonne." },
+  { q:"Pour chercher le max, on initialise max à :", options:["0","T[0]","n","-1"], answer:1, exp:"On part du 1er élément (sûr d'exister)." },
+  { q:"Inverser un tableau : boucler jusqu'à :", options:["n","n/2","n-1","1"], answer:1, exp:"Au-delà de n/2, on ré-inverse." },
+  { q:"Compter les éléments > 10 nécessite :", options:["Un tri","Un accumulateur (compteur)","Un pointeur","Une file"], answer:1, exp:"On incrémente quand la condition est vraie." },
+  { q:"Pour la somme d'un tableau, l'accumulateur démarre à :", options:["1","0","T[n]","Nil"], answer:1, exp:"0 pour une addition." },
+  { q:"Avantage du tableau sur la liste chaînée :", options:["Taille dynamique","Accès direct par indice O(1)","Insertion facile au milieu","Aucun"], answer:1, exp:"Le tableau brille pour l'accès direct." },
+  { q:"Inconvénient du tableau :", options:["Accès lent","Taille fixe + insertion/suppression coûteuses","Pas de type","Impossible à parcourir"], answer:1, exp:"Insérer au milieu = décaler les éléments." }
+];
+</script>
+<script src="../js/data.js"></script><script src="../js/app.js"></script><script src="../js/quiz.js"></script><script src="../js/chapter.js"></script><script src="../js/visualizers/core.js"></script>
+</body></html>

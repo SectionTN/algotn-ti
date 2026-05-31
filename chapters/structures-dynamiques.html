@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Structures dynamiques — AlgoTN</title>
+<meta name="description" content="Structures dynamiques : allocation à l'exécution, tas vs pile, pourquoi le statique ne suffit pas, lien avec pointeurs et listes chaînées.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%236366f1'/><text x='50' y='72' font-size='52' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold'>❖</text></svg>">
+<link rel="stylesheet" href="../css/theme.css"><link rel="stylesheet" href="../css/main.css">
+</head>
+<body data-chapter="structures-dyn">
+<div class="readbar"></div>
+<header class="topbar"><div class="topbar__inner">
+  <button class="iconbtn menu-toggle" title="Menu">☰</button>
+  <a class="brand" href="../index.html"><span class="brand__logo">A</span><span>AlgoTN <small>Algorithmique · TI</small></span></a>
+  <nav><a href="../index.html">Accueil</a><a href="../index.html#chapitres" class="active">Chapitres</a><a href="../pages/revision.html">Révision</a><a href="../pages/exercices.html">Exercices</a></nav>
+  <span class="topbar__spacer"></span>
+  <button class="iconbtn" data-search-open title="Rechercher (Ctrl+K)">🔍</button>
+  <button class="iconbtn" data-theme-toggle title="Thème"><span data-theme-icon>🌙</span></button>
+</div></header>
+<div class="layout">
+  <aside class="sidebar">
+    <h4>Chapitres</h4><nav id="chap-nav"></nav>
+    <h4>Dans ce chapitre</h4><nav class="toc" id="toc"></nav>
+    <button class="btn btn--soft btn--sm" id="fav-btn" style="margin-top:14px;width:100%">☆ Mettre en favori</button>
+  </aside>
+  <article class="article">
+    <div class="crumbs"><a href="../index.html">Accueil</a> › <a href="../index.html#chapitres">Chapitres</a> › <span>Structures dynamiques</span></div>
+    <span class="lead-chip" style="margin-top:14px">❖ Structures dynamiques</span>
+    <h1 style="margin-top:12px">Quand la mémoire respire</h1>
+    <p class="lead muted">Un tableau, tu fixes sa taille au départ et tu es coincé. Une structure dynamique, elle, grandit et rétrécit <b>pendant</b> l'exécution, selon les besoins réels. C'est le pont entre les pointeurs et les listes chaînées, piles, files, arbres…</p>
+
+    <h2 id="probleme"><span class="num">1</span> Le problème du statique</h2>
+    <div class="note note--why"><span class="note__ic">📦</span><div class="note__body"><strong>Pourquoi le tableau ne suffit pas.</strong> Tu déclares <code>Tableau[0..99]</code>. Si tu n'as que 3 éléments → 97 cases gaspillées. S'il t'en faut 101 → impossible, c'est figé. La structure dynamique alloue <b>exactement</b> ce qu'il faut, quand il le faut.</div></div>
+
+    <h2 id="tas"><span class="num">2</span> Pile d'exécution vs Tas</h2>
+    <table class="cmp">
+      <tr><th></th><th>Mémoire statique (pile)</th><th>Mémoire dynamique (tas)</th></tr>
+      <tr><td>Quand</td><td>Taille connue à la compilation</td><td>Taille décidée à l'exécution</td></tr>
+      <tr><td>Comment</td><td>Déclaration <code>Var</code></td><td><code>Allouer</code> / <code>Liberer</code></td></tr>
+      <tr><td>Durée de vie</td><td>Liée au bloc / à la fonction</td><td>Jusqu'au <code>Liberer</code> explicite</td></tr>
+      <tr><td>Géré par</td><td>Automatique</td><td>Le programmeur (attention aux fuites !)</td></tr>
+    </table>
+
+    <h2 id="allocation"><span class="num">3</span> Le cycle de vie d'une case dynamique</h2>
+    <div class="code"><div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">cycle.algo</span><button class="code__copy">Copier</button></div>
+      <pre><code data-raw="Var p : ^entier
+Début
+    Allouer(p)     // 1. naissance : une case neuve dans le tas
+    p^ <- 42       // 2. utilisation : on lit/écrit via p
+    Liberer(p)     // 3. mort : on rend la case au système
+Fin"></code></pre></div>
+    <div class="note note--warn"><span class="note__ic">⚠️</span><div class="note__body"><strong>Deux dangers.</strong> ① <b>Fuite mémoire</b> : Allouer sans Liberer → la mémoire se remplit pour rien. ② <b>Pointeur pendant</b> : utiliser <code>p^</code> après Liberer → erreur. (Voir le chapitre Pointeurs.)</div></div>
+
+    <h2 id="exemples"><span class="num">4</span> Les structures dynamiques classiques</h2>
+    <p>Toutes reposent sur des nœuds alloués dynamiquement et reliés par pointeurs :</p>
+    <div class="grid grid--3">
+      <a class="card card--hover" href="listes-chainees.html"><h3>⛓️ Liste chaînée</h3><p class="muted">Nœuds reliés en file ; insertion/suppression faciles.</p></a>
+      <a class="card card--hover" href="piles.html"><h3>▣ Pile (LIFO)</h3><p class="muted">Dernier entré, premier sorti.</p></a>
+      <a class="card card--hover" href="files.html"><h3>▤ File (FIFO)</h3><p class="muted">Premier entré, premier sorti.</p></a>
+    </div>
+    <p>Le visualiseur ci-dessous (liste chaînée) montre une structure qui grandit/rétrécit à l'exécution — l'essence du dynamique :</p>
+    <div data-viz-linkedlist></div>
+
+    <h2 id="erreurs"><span class="num">5</span> Erreurs fréquentes</h2>
+    <ul>
+      <li>Oublier <code>Liberer</code> → fuite mémoire.</li>
+      <li>Utiliser un pointeur après <code>Liberer</code> → pointeur pendant.</li>
+      <li>Perdre l'unique pointeur vers une zone allouée (impossible à libérer ensuite).</li>
+      <li>Déréférencer un pointeur <code>Nil</code> ou non alloué.</li>
+    </ul>
+    <div class="note note--exam"><span class="note__ic">🎯</span><div class="note__body"><strong>Astuce examen.</strong> « Pourquoi une structure dynamique ? » → réponse type : <b>le nombre d'éléments varie et n'est pas connu à l'avance</b>, on évite le gaspillage et les limites du tableau, et l'insertion/suppression est efficace.</div></div>
+
+    <h2 id="exercices"><span class="num">6</span> Exercice corrigé</h2>
+    <div class="exo"><div class="exo__head"><span class="pill pill--facile">Facile</span><h4>Créer et libérer un entier dynamique</h4></div>
+      <p class="exo__statement">Alloue dynamiquement un entier, mets-y 100, affiche-le, puis libère.</p>
+      <button class="btn btn--soft btn--sm exo__toggle" data-exo-toggle>▼ Voir la correction</button>
+      <div class="exo__sol"><div class="code"><div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">dyn.algo</span><button class="code__copy">Copier</button></div>
+        <pre><code data-raw="Var p : ^entier
+Début
+    Allouer(p)
+    p^ <- 100
+    Ecrire(p^)     // 100
+    Liberer(p)     // on rend la mémoire
+Fin"></code></pre></div></div></div>
+
+    <h2 id="qcm"><span class="num">7</span> QCM</h2>
+    <div class="quiz" data-quiz="structures-dyn" data-time="360"></div>
+
+    <h2 id="resume"><span class="num">8</span> Mini-résumé</h2>
+    <div class="card" style="background:var(--surface-2)"><ul style="margin-top:0">
+      <li>Dynamique = taille décidée à l'exécution (vs tableau figé).</li>
+      <li>Tas = zone d'allocation via <code>Allouer</code>/<code>Liberer</code>.</li>
+      <li>Cycle : Allouer → utiliser (p^) → Liberer.</li>
+      <li>Dangers : fuite mémoire, pointeur pendant.</li>
+      <li>Listes, piles, files, arbres = structures dynamiques à base de pointeurs.</li>
+    </ul></div>
+    <div id="prevnext" style="display:flex;gap:14px;margin-top:34px;flex-wrap:wrap"></div>
+  </article>
+</div>
+<footer class="footer"><div class="footer__inner"><div><b class="grad-text">AlgoTN</b> — Programme Algorithmique & Structures de Données, TI.</div><div>100% hors-ligne · Ta progression reste sur ton appareil.</div></div></footer>
+<button class="iconbtn totop" title="Haut de page">↑</button>
+<div class="search-modal"><div class="search-box"><input type="text" placeholder="Rechercher… (Échap pour fermer)"><div class="search-results"></div></div></div>
+<script>
+window.ALGOTN_QUIZ = [
+  { q:"Une structure dynamique :", options:["A une taille fixe","Grandit/rétrécit à l'exécution","Est un tableau","N'utilise pas de mémoire"], answer:1, exp:"Sa taille s'adapte au besoin réel." },
+  { q:"On alloue dynamiquement avec :", options:["Lire","Allouer","Pour","Ecrire"], answer:1, exp:"Allouer réserve une case dans le tas." },
+  { q:"On rend la mémoire avec :", options:["Liberer","Allouer","Nil","Retourner"], answer:0, exp:"Liberer restitue la case." },
+  { q:"La zone d'allocation dynamique s'appelle :", options:["La pile d'appels","Le tas (heap)","Le cache","Le disque"], answer:1, exp:"Le tas gère la mémoire dynamique." },
+  { q:"Allouer sans Liberer cause :", options:["Rien","Une fuite mémoire","Un tri","Un débordement de pile"], answer:1, exp:"La mémoire reste réservée inutilement." },
+  { q:"Pourquoi préférer une structure dynamique ?", options:["Toujours plus rapide","Nombre d'éléments variable/inconnu d'avance","Moins de code","Pour trier"], answer:1, exp:"Évite gaspillage et limites du tableau." },
+  { q:"Le tableau est une structure :", options:["Dynamique","Statique (taille fixe)","Chaînée","Récursive"], answer:1, exp:"Sa taille est figée à la déclaration." },
+  { q:"Cycle de vie d'une case dynamique :", options:["Liberer → Allouer","Allouer → utiliser → Liberer","Utiliser → Allouer","Lire → Ecrire"], answer:1, exp:"Naissance, usage, mort." },
+  { q:"Utiliser p^ après Liberer(p) :", options:["Renvoie 0","Pointeur pendant → erreur","Réalloue","Trie"], answer:1, exp:"La case n'existe plus." },
+  { q:"Une liste chaînée est :", options:["Statique","Dynamique","Un tableau","Une boucle"], answer:1, exp:"Nœuds alloués/libérés à l'exécution." },
+  { q:"Perdre l'unique pointeur vers une zone allouée :", options:["Aucun souci","La rend impossible à libérer (fuite)","La libère","La copie"], answer:1, exp:"Plus aucun moyen d'y accéder." },
+  { q:"Pile, file, arbre reposent sur :", options:["Des tableaux fixes","Des pointeurs / allocation dynamique","Des constantes","Des boucles uniquement"], answer:1, exp:"Structures dynamiques à base de nœuds." },
+  { q:"La durée de vie d'une case du tas :", options:["Automatique à la fin de la fonction","Jusqu'au Liberer explicite","1 tour de boucle","Infinie"], answer:1, exp:"Le programmeur décide quand libérer." },
+  { q:"Déréférencer un pointeur Nil :", options:["Renvoie 0","Provoque une erreur","Alloue","Trie"], answer:1, exp:"Nil ne pointe sur aucune case valide." },
+  { q:"Avantage clé du dynamique sur le tableau :", options:["Accès direct O(1)","Taille adaptable + insertion/suppression efficaces","Plus simple à déclarer","Aucun"], answer:1, exp:"Souplesse de taille et de modification." }
+];
+</script>
+<script src="../js/data.js"></script><script src="../js/app.js"></script><script src="../js/quiz.js"></script><script src="../js/chapter.js"></script><script src="../js/visualizers/linkedlist.js"></script>
+</body></html>

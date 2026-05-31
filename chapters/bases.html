@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Algorithmes de base — AlgoTN</title>
+<meta name="description" content="DÉBUT, FIN, variables, constantes, affectation, lecture/écriture : les fondations de tout algorithme, avec simulateur d'exécution.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%236366f1'/><text x='50' y='72' font-size='52' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold'>▶</text></svg>">
+<link rel="stylesheet" href="../css/theme.css"><link rel="stylesheet" href="../css/main.css">
+</head>
+<body data-chapter="bases">
+<div class="readbar"></div>
+<header class="topbar"><div class="topbar__inner">
+  <button class="iconbtn menu-toggle" title="Menu">☰</button>
+  <a class="brand" href="../index.html"><span class="brand__logo">A</span><span>AlgoTN <small>Algorithmique · TI</small></span></a>
+  <nav><a href="../index.html">Accueil</a><a href="../index.html#chapitres" class="active">Chapitres</a><a href="../pages/revision.html">Révision</a><a href="../pages/exercices.html">Exercices</a></nav>
+  <span class="topbar__spacer"></span>
+  <button class="iconbtn" data-search-open title="Rechercher (Ctrl+K)">🔍</button>
+  <button class="iconbtn" data-theme-toggle title="Thème"><span data-theme-icon>🌙</span></button>
+</div></header>
+<div class="layout">
+  <aside class="sidebar">
+    <h4>Chapitres</h4><nav id="chap-nav"></nav>
+    <h4>Dans ce chapitre</h4><nav class="toc" id="toc"></nav>
+    <button class="btn btn--soft btn--sm" id="fav-btn" style="margin-top:14px;width:100%">☆ Mettre en favori</button>
+  </aside>
+  <article class="article">
+    <div class="crumbs"><a href="../index.html">Accueil</a> › <a href="../index.html#chapitres">Chapitres</a> › <span>Algorithmes de base</span></div>
+    <span class="lead-chip" style="margin-top:14px">▶ Algorithmes de base</span>
+    <h1 style="margin-top:12px">Les fondations : DÉBUT, variables, FIN</h1>
+    <p class="lead muted">Un algorithme, c'est une recette : une suite d'instructions précises pour passer de « ce qu'on a » à « ce qu'on veut ». Avant les boucles et les pointeurs, il faut maîtriser ces briques de base. Elles reviennent dans absolument tout.</p>
+
+    <h2 id="squelette"><span class="num">1</span> Le squelette d'un algorithme</h2>
+    <p>Tout algorithme a la même charpente : un nom, une zone de déclarations, puis le corps entre <b>DÉBUT</b> et <b>FIN</b>.</p>
+    <div class="code"><div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">squelette.algo</span><button class="code__copy">Copier</button></div>
+      <pre><code data-raw="Algorithme monAlgo
+Const TVA = 0.19          // constante : ne change jamais
+Var prix, total : reel    // variables : valeurs qui évoluent
+Début
+    // ... instructions ...
+Fin"></code></pre></div>
+    <div class="note note--why"><span class="note__ic">🤔</span><div class="note__body"><strong>Pourquoi déclarer ?</strong> Déclarer une variable, c'est réserver une case mémoire et lui donner un nom + un type. Le type dit quelle sorte de valeur la case accepte (entier, réel, caractère, chaîne, booléen).</div></div>
+
+    <h2 id="variables"><span class="num">2</span> Variables, constantes &amp; affectation</h2>
+    <table class="cmp">
+      <tr><th>Notion</th><th>Sens</th><th>Exemple</th></tr>
+      <tr><td><b>Variable</b></td><td>Case nommée dont la valeur peut changer</td><td><code>age : entier</code></td></tr>
+      <tr><td><b>Constante</b></td><td>Valeur fixée une fois pour toutes</td><td><code>Const PI = 3.14</code></td></tr>
+      <tr><td><b>Affectation</b> (←)</td><td>« mettre une valeur dans une case »</td><td><code>age ← 20</code></td></tr>
+    </table>
+    <div class="note note--warn"><span class="note__ic">⚠️</span><div class="note__body"><strong>Le sens de la flèche compte</strong> <code>x ← y</code> copie y DANS x (x change, y inchangé). <code>x ← x + 1</code> se lit « la nouvelle valeur de x = ancienne + 1 ». Ce n'est pas une égalité mathématique !</div></div>
+
+    <h2 id="es"><span class="num">3</span> Entrées / Sorties : Lire &amp; Ecrire</h2>
+    <ul>
+      <li><code>Lire(x)</code> → demande une valeur à l'utilisateur et la range dans x (entrée).</li>
+      <li><code>Ecrire(x)</code> → affiche la valeur de x à l'écran (sortie).</li>
+    </ul>
+
+    <h2 id="simulateur"><span class="num">4</span> Simulateur : exécute pas à pas</h2>
+    <p>Change A et B, lance, et regarde la mémoire et la sortie évoluer ligne par ligne. C'est exactement ce que fait la machine.</p>
+    <div data-viz-execution></div>
+
+    <h2 id="erreurs"><span class="num">5</span> Erreurs fréquentes</h2>
+    <ul>
+      <li>Utiliser une variable <b>avant</b> de lui donner une valeur (contenu indéterminé).</li>
+      <li>Confondre <code>=</code> (test d'égalité) et <code>←</code> (affectation).</li>
+      <li>Mauvais type : ranger un réel dans un entier perd la partie décimale.</li>
+      <li>Oublier de <code>Lire</code> avant d'utiliser une donnée saisie.</li>
+    </ul>
+    <div class="note note--exam"><span class="note__ic">🎯</span><div class="note__body"><strong>Astuce examen.</strong> Pour « échanger deux variables », il faut une 3ᵉ variable d'aide : <code>aux←a ; a←b ; b←aux</code>. Sans aux, on écrase une valeur.</div></div>
+
+    <h2 id="exercices"><span class="num">6</span> Exercices corrigés</h2>
+    <div class="exo"><div class="exo__head"><span class="pill pill--facile">Facile</span><h4>Moyenne de deux notes</h4></div>
+      <p class="exo__statement">Lire deux notes, afficher leur moyenne.</p>
+      <button class="btn btn--soft btn--sm exo__toggle" data-exo-toggle>▼ Voir la correction</button>
+      <div class="exo__sol"><div class="code"><div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">moyenne.algo</span><button class="code__copy">Copier</button></div>
+        <pre><code data-raw="Algorithme moyenne
+Var n1, n2, m : reel
+Début
+    Lire(n1) ; Lire(n2)
+    m <- (n1 + n2) / 2
+    Ecrire(""Moyenne = "", m)
+Fin"></code></pre></div></div></div>
+    <div class="exo"><div class="exo__head"><span class="pill pill--moyen">Moyen</span><h4>Échanger deux variables</h4></div>
+      <p class="exo__statement">Échanger les valeurs de a et b sans les perdre.</p>
+      <button class="btn btn--soft btn--sm exo__toggle" data-exo-toggle>▼ Voir la correction</button>
+      <div class="exo__sol"><div class="exo__step"><b>Idée.</b> Sauvegarder a dans aux avant d'écraser.</div><div class="code"><div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">echange.algo</span><button class="code__copy">Copier</button></div>
+        <pre><code data-raw="Var a, b, aux : entier
+Début
+    aux <- a
+    a <- b
+    b <- aux
+Fin"></code></pre></div></div></div>
+
+    <h2 id="qcm"><span class="num">7</span> QCM</h2>
+    <div class="quiz" data-quiz="bases" data-time="420"></div>
+
+    <h2 id="resume"><span class="num">8</span> Mini-résumé</h2>
+    <div class="card" style="background:var(--surface-2)"><ul style="margin-top:0">
+      <li>Charpente : nom → déclarations → DÉBUT … FIN.</li>
+      <li>Variable = case nommée typée ; constante = valeur fixe.</li>
+      <li><code>←</code> = affectation (pas une égalité).</li>
+      <li><code>Lire</code> = entrée, <code>Ecrire</code> = sortie.</li>
+      <li>Échange ⟹ variable d'aide.</li>
+    </ul></div>
+    <div id="prevnext" style="display:flex;gap:14px;margin-top:34px;flex-wrap:wrap"></div>
+  </article>
+</div>
+<footer class="footer"><div class="footer__inner"><div><b class="grad-text">AlgoTN</b> — Programme Algorithmique & Structures de Données, TI.</div><div>100% hors-ligne · Ta progression reste sur ton appareil.</div></div></footer>
+<button class="iconbtn totop" title="Haut de page">↑</button>
+<div class="search-modal"><div class="search-box"><input type="text" placeholder="Rechercher… (Échap pour fermer)"><div class="search-results"></div></div></div>
+<script>
+window.ALGOTN_QUIZ = [
+  { q:"Que fait l'affectation x ← 5 ?", options:["Teste si x vaut 5","Range 5 dans la case x","Affiche 5","Déclare x"], answer:1, exp:"← copie une valeur dans une variable." },
+  { q:"Une constante :", options:["Change à chaque exécution","Garde la même valeur partout","Doit être lue","Est toujours un entier"], answer:1, exp:"Const = valeur fixée une fois." },
+  { q:"Lire(x) sert à :", options:["Afficher x","Saisir une valeur dans x","Supprimer x","Doubler x"], answer:1, exp:"Lire = entrée utilisateur." },
+  { q:"Ecrire(x) sert à :", options:["Saisir x","Afficher la valeur de x","Effacer x","Trier x"], answer:1, exp:"Ecrire = sortie écran." },
+  { q:"Pour échanger a et b il faut :", options:["a←b ; b←a","Une variable d'aide aux","Rien de spécial","Une boucle"], answer:1, exp:"Sans aux, on écrase une valeur." },
+  { q:"x ← x + 1 signifie :", options:["x est égal à x+1 (impossible)","nouvelle valeur de x = ancienne + 1","erreur","x devient 1"], answer:1, exp:"Incrémentation : on met à jour x." },
+  { q:"Déclarer une variable, c'est :", options:["L'afficher","Réserver une case mémoire + nom + type","La supprimer","La trier"], answer:1, exp:"On réserve l'espace et on fixe le type." },
+  { q:"Le corps d'un algorithme est délimité par :", options:["{ }","DÉBUT … FIN","( )","SI … FINSI"], answer:1, exp:"Entre Début et Fin." },
+  { q:"Quel type pour stocker 'A' ?", options:["entier","caractère","réel","booléen"], answer:1, exp:"Un seul symbole = caractère." },
+  { q:"Quel type pour 3.14 ?", options:["entier","réel","chaîne","caractère"], answer:1, exp:"Nombre à virgule = réel." },
+  { q:"Utiliser une variable non initialisée donne :", options:["0 garanti","Une valeur indéterminée","Une erreur de compilation toujours","Nil"], answer:1, exp:"Contenu imprévisible tant qu'on n'a rien affecté." },
+  { q:"= dans une condition signifie :", options:["Affectation","Test d'égalité","Incrément","Lecture"], answer:1, exp:"En test : on compare ; ← pour affecter." },
+  { q:"Pour mémoriser Vrai/Faux on utilise :", options:["entier","booléen","chaîne","réel"], answer:1, exp:"Type logique = booléen." },
+  { q:"Une chaîne de caractères stocke :", options:["Un seul caractère","Une suite de caractères","Un entier","Un booléen"], answer:1, exp:"Ex : \"Bonjour\"." },
+  { q:"L'ordre des instructions dans un algorithme :", options:["N'a aucune importance","Est essentiel (séquentiel)","Est aléatoire","Se trie tout seul"], answer:1, exp:"Les instructions s'exécutent dans l'ordre." }
+];
+</script>
+<script src="../js/data.js"></script><script src="../js/app.js"></script><script src="../js/quiz.js"></script><script src="../js/chapter.js"></script><script src="../js/visualizers/core.js"></script>
+</body></html>

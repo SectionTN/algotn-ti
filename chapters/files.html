@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Les files — AlgoTN</title>
+<meta name="description" content="Les files (FIFO) : enfiler, défiler, tête, queue, applications, avec Queue Visualizer animé.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%2306b6d4'/><text x='50' y='72' font-size='52' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold'>▤</text></svg>">
+<link rel="stylesheet" href="../css/theme.css"><link rel="stylesheet" href="../css/main.css">
+</head>
+<body data-chapter="files">
+<div class="readbar"></div>
+<header class="topbar"><div class="topbar__inner">
+  <button class="iconbtn menu-toggle" title="Menu">☰</button>
+  <a class="brand" href="../index.html"><span class="brand__logo">A</span><span>AlgoTN <small>Algorithmique · TI</small></span></a>
+  <nav><a href="../index.html">Accueil</a><a href="../index.html#chapitres" class="active">Chapitres</a><a href="../pages/revision.html">Révision</a><a href="../pages/exercices.html">Exercices</a></nav>
+  <span class="topbar__spacer"></span>
+  <button class="iconbtn" data-search-open title="Rechercher (Ctrl+K)">🔍</button>
+  <button class="iconbtn" data-theme-toggle title="Thème"><span data-theme-icon>🌙</span></button>
+</div></header>
+<div class="layout">
+  <aside class="sidebar">
+    <h4>Chapitres</h4><nav id="chap-nav"></nav>
+    <h4>Dans ce chapitre</h4><nav class="toc" id="toc"></nav>
+    <button class="btn btn--soft btn--sm" id="fav-btn" style="margin-top:14px;width:100%">☆ Mettre en favori</button>
+  </aside>
+  <article class="article">
+    <div class="crumbs"><a href="../index.html">Accueil</a> › <a href="../index.html#chapitres">Chapitres</a> › <span>Files</span></div>
+    <span class="lead-chip" style="margin-top:14px">▤ Les files</span>
+    <h1 style="margin-top:12px">La file : premier arrivé, premier servi</h1>
+    <p class="lead muted">La file d'attente à la boulangerie : le premier arrivé est servi en premier, on entre par la fin, on sort par le début. C'est une file (queue). Principe : <b>FIFO</b> (First In, First Out). L'exact opposé de la pile.</p>
+
+    <h2 id="principe"><span class="num">1</span> Le principe FIFO</h2>
+    <div class="note note--analogy"><span class="note__ic">🥖</span><div class="note__body"><strong>Analogie : la file d'attente.</strong> On rejoint la <b>queue</b> (derrière), on est servi depuis la <b>tête</b> (devant). Pas de passe-droit : l'ordre d'arrivée est respecté.</div></div>
+    <p>Deux opérations principales :</p>
+    <ul>
+      <li><b>Enfiler (enqueue)</b> : ajouter un élément en <b>queue</b>.</li>
+      <li><b>Défiler (dequeue)</b> : retirer l'élément de <b>tête</b>.</li>
+    </ul>
+
+    <h2 id="visualiseur"><span class="num">2</span> Queue Visualizer</h2>
+    <p>Enfile (ça s'ajoute à droite, en queue) et défile (ça part par la gauche, en tête). L'ordre d'arrivée est toujours respecté.</p>
+    <div data-viz-queue></div>
+
+    <h2 id="comparaison"><span class="num">3</span> Pile vs File</h2>
+    <table class="cmp">
+      <tr><th></th><th>Pile (LIFO)</th><th>File (FIFO)</th></tr>
+      <tr><td>Entrée</td><td>Sommet</td><td>Queue</td></tr>
+      <tr><td>Sortie</td><td>Sommet</td><td>Tête</td></tr>
+      <tr><td>Image</td><td>Pile d'assiettes</td><td>File d'attente</td></tr>
+      <tr><td>Sort en 1er</td><td>Le dernier entré</td><td>Le premier entré</td></tr>
+    </table>
+
+    <h2 id="applications"><span class="num">4</span> Applications classiques</h2>
+    <ul>
+      <li>Files d'attente : impression, tâches, serveurs.</li>
+      <li>Gestion de commandes/colis dans l'ordre d'arrivée.</li>
+      <li>Parcours en largeur d'un graphe/arbre (BFS).</li>
+      <li>Tampons (buffers) de données.</li>
+    </ul>
+    <div class="note note--exam"><span class="note__ic">🎯</span><div class="note__body"><strong>Astuce examen.</strong> « Dans l'ordre d'arrivée », « premier arrivé premier servi », « file d'attente » ⟹ file (FIFO). « Dernier d'abord », « annuler », « inverser » ⟹ pile (LIFO).</div></div>
+
+    <h2 id="erreurs"><span class="num">5</span> Erreurs fréquentes</h2>
+    <ul>
+      <li>Défiler une file <b>vide</b>.</li>
+      <li>Confondre tête (sortie) et queue (entrée).</li>
+      <li>Confondre FIFO (file) et LIFO (pile).</li>
+    </ul>
+
+    <h2 id="exercices"><span class="num">6</span> Exercice corrigé</h2>
+    <div class="exo"><div class="exo__head"><span class="pill pill--facile">Facile</span><h4>Simuler une file de tickets</h4></div>
+      <p class="exo__statement">Enfiler 3 numéros de ticket, puis appeler (défiler) le premier client.</p>
+      <button class="btn btn--soft btn--sm exo__toggle" data-exo-toggle>▼ Voir la correction</button>
+      <div class="exo__sol"><div class="code"><div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">tickets.algo</span><button class="code__copy">Copier</button></div>
+        <pre><code data-raw="Enfiler(F, 1)
+Enfiler(F, 2)
+Enfiler(F, 3)
+Si (non EstVide(F)) Alors
+    Defiler(F, t)          // t = 1 (premier arrivé)
+    Ecrire(""On appelle le ticket "", t)
+FinSi"></code></pre></div></div></div>
+
+    <h2 id="qcm"><span class="num">7</span> QCM</h2>
+    <div class="quiz" data-quiz="files" data-time="360"></div>
+
+    <h2 id="resume"><span class="num">8</span> Mini-résumé</h2>
+    <div class="card" style="background:var(--surface-2)"><ul style="margin-top:0">
+      <li>File = FIFO (premier entré, premier sorti).</li>
+      <li>Entrée en <b>queue</b>, sortie en <b>tête</b>.</li>
+      <li>enfiler (enqueue), défiler (dequeue).</li>
+      <li>Opposé de la pile (LIFO).</li>
+      <li>Usage : files d'attente, BFS, buffers.</li>
+    </ul></div>
+    <div id="prevnext" style="display:flex;gap:14px;margin-top:34px;flex-wrap:wrap"></div>
+  </article>
+</div>
+<footer class="footer"><div class="footer__inner"><div><b class="grad-text">AlgoTN</b> — Programme Algorithmique & Structures de Données, TI.</div><div>100% hors-ligne · Ta progression reste sur ton appareil.</div></div></footer>
+<button class="iconbtn totop" title="Haut de page">↑</button>
+<div class="search-modal"><div class="search-box"><input type="text" placeholder="Rechercher… (Échap pour fermer)"><div class="search-results"></div></div></div>
+<script>
+window.ALGOTN_QUIZ = [
+  { q:"Une file suit le principe :", options:["LIFO","FIFO","Aléatoire","Trié"], answer:1, exp:"First In, First Out." },
+  { q:"Enfiler ajoute :", options:["En tête","En queue","Au milieu","Partout"], answer:1, exp:"On entre par la fin." },
+  { q:"Défiler retire :", options:["La queue","La tête (premier entré)","Le milieu","Rien"], answer:1, exp:"On sort par le début." },
+  { q:"La file est l'opposé de :", options:["L'arbre","La pile (LIFO)","Le tableau","La liste"], answer:1, exp:"Ordre de sortie inversé." },
+  { q:"File d'attente boulangerie =", options:["Pile","File (FIFO)","Tableau trié","Arbre"], answer:1, exp:"Premier arrivé, premier servi." },
+  { q:"Si on enfile 1,2,3 et on défile une fois :", options:["3","1","2","rien"], answer:1, exp:"Le premier entré (1) sort en premier." },
+  { q:"Avant de défiler il faut tester :", options:["Le type","EstVide","La queue uniquement","Rien"], answer:1, exp:"Défiler une file vide = erreur." },
+  { q:"« Dans l'ordre d'arrivée » suggère :", options:["Une pile","Une file","Un tri","Un arbre"], answer:1, exp:"FIFO respecte l'ordre d'arrivée." },
+  { q:"La tête d'une file est :", options:["Le point d'entrée","Le point de sortie","Le milieu","Vide"], answer:1, exp:"On défile depuis la tête." },
+  { q:"La queue d'une file est :", options:["Le point de sortie","Le point d'entrée","La tête","Le sommet"], answer:1, exp:"On enfile en queue." },
+  { q:"Le parcours en largeur (BFS) utilise :", options:["Une pile","Une file","Un tri","Une moyenne"], answer:1, exp:"BFS = file ; DFS = pile." },
+  { q:"Gérer des colis dans l'ordre d'arrivée :", options:["Pile","File","Tableau trié","Arbre"], answer:1, exp:"FIFO préserve l'ordre." },
+  { q:"Pile : sort en 1er… / File : sort en 1er…", options:["dernier / dernier","dernier entré / premier entré","premier / dernier","identique"], answer:1, exp:"LIFO vs FIFO." },
+  { q:"Une file peut être implémentée avec :", options:["Tableau (circulaire) ou liste chaînée","Uniquement un réel","Uniquement une pile","Rien"], answer:0, exp:"Tableau circulaire ou liste avec tête+queue." },
+  { q:"Un buffer (tampon) se comporte souvent comme :", options:["Une pile","Une file","Un arbre","Un tri"], answer:1, exp:"Les données sortent dans l'ordre d'entrée." }
+];
+</script>
+<script src="../js/data.js"></script><script src="../js/app.js"></script><script src="../js/quiz.js"></script><script src="../js/chapter.js"></script><script src="../js/visualizers/core.js"></script>
+</body></html>

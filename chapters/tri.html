@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Les tris — AlgoTN</title>
+<meta name="description" content="Tri à bulles, par sélection, par insertion : principe, code, complexité, avec visualiseur animé montrant chaque échange.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%23f43f5e'/><text x='50' y='72' font-size='52' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold'>⇅</text></svg>">
+<link rel="stylesheet" href="../css/theme.css"><link rel="stylesheet" href="../css/main.css">
+</head>
+<body data-chapter="tri">
+<div class="readbar"></div>
+<header class="topbar"><div class="topbar__inner">
+  <button class="iconbtn menu-toggle" title="Menu">☰</button>
+  <a class="brand" href="../index.html"><span class="brand__logo">A</span><span>AlgoTN <small>Algorithmique · TI</small></span></a>
+  <nav><a href="../index.html">Accueil</a><a href="../index.html#chapitres" class="active">Chapitres</a><a href="../pages/revision.html">Révision</a><a href="../pages/exercices.html">Exercices</a></nav>
+  <span class="topbar__spacer"></span>
+  <button class="iconbtn" data-search-open title="Rechercher (Ctrl+K)">🔍</button>
+  <button class="iconbtn" data-theme-toggle title="Thème"><span data-theme-icon>🌙</span></button>
+</div></header>
+<div class="layout">
+  <aside class="sidebar">
+    <h4>Chapitres</h4><nav id="chap-nav"></nav>
+    <h4>Dans ce chapitre</h4><nav class="toc" id="toc"></nav>
+    <button class="btn btn--soft btn--sm" id="fav-btn" style="margin-top:14px;width:100%">☆ Mettre en favori</button>
+  </aside>
+  <article class="article">
+    <div class="crumbs"><a href="../index.html">Accueil</a> › <a href="../index.html#chapitres">Chapitres</a> › <span>Tris</span></div>
+    <span class="lead-chip" style="margin-top:14px">⇅ Les tris</span>
+    <h1 style="margin-top:12px">Mettre de l'ordre</h1>
+    <p class="lead muted">Trier, c'est ranger des éléments dans l'ordre (croissant le plus souvent). C'est l'un des sujets les plus enseignés car il illustre parfaitement comment des idées différentes résolvent le même problème, avec des coûts différents.</p>
+
+    <h2 id="visualiseur"><span class="num">1</span> Visualiseur : vois chaque échange</h2>
+    <p>Choisis une méthode et regarde les comparaisons (jaune) et les échanges (rouge) jusqu'à ce que tout soit vert (trié). Le meilleur moyen de comprendre.</p>
+    <div data-viz-sort></div>
+
+    <h2 id="bulle"><span class="num">2</span> Tri à bulles</h2>
+    <p>On compare chaque paire de voisins et on les échange si l'ordre est mauvais. Les grandes valeurs « remontent » comme des bulles. On répète jusqu'à ce qu'aucun échange ne soit nécessaire.</p>
+    <div class="code"><div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">tri_bulles.algo</span><button class="code__copy">Copier</button></div>
+      <pre><code data-raw="Pour i De 0 À n-2 Faire
+    Pour j De 0 À n-2-i Faire
+        Si (T[j] > T[j+1]) Alors
+            aux <- T[j] ; T[j] <- T[j+1] ; T[j+1] <- aux   // échange
+        FinSi
+    FinPour
+FinPour"></code></pre></div>
+
+    <h2 id="selection"><span class="num">3</span> Tri par sélection</h2>
+    <p>À chaque tour, on cherche le <b>minimum</b> du reste non trié et on le place à sa position. Peu d'échanges, beaucoup de comparaisons.</p>
+    <div class="code"><div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">tri_selection.algo</span><button class="code__copy">Copier</button></div>
+      <pre><code data-raw="Pour i De 0 À n-2 Faire
+    min <- i
+    Pour j De i+1 À n-1 Faire
+        Si (T[j] < T[min]) Alors min <- j FinSi
+    FinPour
+    Si (min <> i) Alors aux <- T[i] ; T[i] <- T[min] ; T[min] <- aux FinSi
+FinPour"></code></pre></div>
+
+    <h2 id="insertion"><span class="num">4</span> Tri par insertion</h2>
+    <p>Comme on trie des cartes en main : on prend chaque élément et on l'<b>insère</b> à sa place parmi ceux déjà triés à gauche. Très efficace sur un tableau presque trié.</p>
+    <div class="code"><div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">tri_insertion.algo</span><button class="code__copy">Copier</button></div>
+      <pre><code data-raw="Pour i De 1 À n-1 Faire
+    cle <- T[i] ; j <- i - 1
+    TantQue (j >= 0) et (T[j] > cle) Faire
+        T[j+1] <- T[j] ; j <- j - 1
+    FinTantQue
+    T[j+1] <- cle
+FinPour"></code></pre></div>
+
+    <h2 id="complexite"><span class="num">5</span> Comparaison &amp; complexité</h2>
+    <table class="cmp">
+      <tr><th>Tri</th><th>Idée</th><th>Complexité</th></tr>
+      <tr><td>À bulles</td><td>Échanger les voisins mal ordonnés</td><td>O(n²)</td></tr>
+      <tr><td>Sélection</td><td>Placer le min à chaque tour</td><td>O(n²)</td></tr>
+      <tr><td>Insertion</td><td>Insérer chaque élément à sa place</td><td>O(n²) — O(n) si presque trié</td></tr>
+    </table>
+    <div class="note note--intui"><span class="note__ic">🧮</span><div class="note__body"><strong>Pourquoi O(n²) ?</strong> Ces tris « simples » comparent grosso modo chaque élément à chaque autre : ~n×n opérations. Pour de gros tableaux, on utilise des tris plus rapides (fusion, rapide) en O(n log n), mais ces trois-là sont le socle pédagogique.</div></div>
+
+    <h2 id="erreurs"><span class="num">6</span> Erreurs fréquentes</h2>
+    <ul>
+      <li>Oublier la variable d'aide pour l'échange (on écrase une valeur).</li>
+      <li>Mauvaises bornes des boucles (dépassement ou dernier élément oublié).</li>
+      <li>Inverser la comparaison (tri décroissant au lieu de croissant).</li>
+      <li>En insertion : oublier de replacer la clé après le décalage.</li>
+    </ul>
+    <div class="note note--exam"><span class="note__ic">🎯</span><div class="note__body"><strong>Astuce examen.</strong> On peut aussi trier une <b>liste chaînée</b> par tri à bulles (TD4) : on compare les valeurs des nœuds voisins et on échange les <b>valeurs</b> (avec une variable d'aide), plus simple que de rebrancher les pointeurs.</div></div>
+
+    <h2 id="exercices"><span class="num">7</span> Exercice corrigé</h2>
+    <div class="exo"><div class="exo__head"><span class="pill pill--moyen">Moyen</span><span class="pill pill--examen">TD4</span><h4>Tri à bulles d'une liste chaînée</h4></div>
+      <p class="exo__statement">Trier une liste chaînée d'entiers en ordre croissant par tri à bulles (échanger les valeurs).</p>
+      <button class="btn btn--soft btn--sm exo__toggle" data-exo-toggle>▼ Voir la correction</button>
+      <div class="exo__sol"><div class="exo__step"><b>Idée.</b> On reparcourt la liste tant qu'il y a eu un échange ; on compare <code>p^.valeur</code> et <code>p^.suivant^.valeur</code>.</div><div class="code"><div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">tri_liste.algo</span><button class="code__copy">Copier</button></div>
+        <pre><code data-raw="Procédure Tri_bulle(var L : Liste)
+Var p : Liste ; aux : entier ; permute : booleen
+Début
+    Répéter
+        permute <- Faux
+        p <- L
+        TantQue (p^.suivant <> Nil) Faire
+            Si (p^.valeur > p^.suivant^.valeur) Alors
+                aux <- p^.valeur
+                p^.valeur <- p^.suivant^.valeur
+                p^.suivant^.valeur <- aux
+                permute <- Vrai
+            FinSi
+            p <- p^.suivant
+        FinTantQue
+    Jusqu'à (permute = Faux)
+FinProcédure"></code></pre></div></div></div>
+
+    <h2 id="qcm"><span class="num">8</span> QCM</h2>
+    <div class="quiz" data-quiz="tri" data-time="420"></div>
+
+    <h2 id="resume"><span class="num">9</span> Mini-résumé</h2>
+    <div class="card" style="background:var(--surface-2)"><ul style="margin-top:0">
+      <li>Bulles : échange les voisins mal ordonnés.</li>
+      <li>Sélection : place le minimum à chaque tour.</li>
+      <li>Insertion : insère chaque élément à sa place (rapide si presque trié).</li>
+      <li>Les trois sont en O(n²) ; échange ⟹ variable d'aide.</li>
+    </ul></div>
+    <div id="prevnext" style="display:flex;gap:14px;margin-top:34px;flex-wrap:wrap"></div>
+  </article>
+</div>
+<footer class="footer"><div class="footer__inner"><div><b class="grad-text">AlgoTN</b> — Programme Algorithmique & Structures de Données, TI.</div><div>100% hors-ligne · Ta progression reste sur ton appareil.</div></div></footer>
+<button class="iconbtn totop" title="Haut de page">↑</button>
+<div class="search-modal"><div class="search-box"><input type="text" placeholder="Rechercher… (Échap pour fermer)"><div class="search-results"></div></div></div>
+<script>
+window.ALGOTN_QUIZ = [
+  { q:"Le tri à bulles compare :", options:["Des éléments éloignés","Des voisins (T[j] et T[j+1])","Le min et le max","Rien"], answer:1, exp:"On échange les voisins mal ordonnés." },
+  { q:"Le tri par sélection cherche à chaque tour :", options:["Le max","Le minimum du reste","Une valeur aléatoire","La moyenne"], answer:1, exp:"On place le min à sa position." },
+  { q:"Le tri par insertion ressemble à :", options:["Trier des cartes en main","Empiler des assiettes","Une file d'attente","Une recherche"], answer:0, exp:"On insère chaque carte à sa place." },
+  { q:"Complexité des tris simples (bulles/sélection/insertion) :", options:["O(1)","O(n)","O(n²)","O(log n)"], answer:2, exp:"Comparaisons proportionnelles à n×n." },
+  { q:"Pour échanger deux valeurs il faut :", options:["Rien","Une variable d'aide","Un pointeur","Une file"], answer:1, exp:"Sinon on écrase une valeur." },
+  { q:"Le tri par insertion est rapide si le tableau est :", options:["Aléatoire","Presque trié","Inversé","Vide"], answer:1, exp:"Peu de décalages → proche de O(n)." },
+  { q:"Inverser la comparaison (> en <) donne :", options:["Une erreur","Un tri décroissant","Aucun effet","Un crash"], answer:1, exp:"On change le sens de l'ordre." },
+  { q:"Dans le tri à bulles, les grandes valeurs :", options:["Descendent","Remontent vers la fin","Disparaissent","Restent fixes"], answer:1, exp:"Elles 'bullent' vers la droite." },
+  { q:"Le tri par sélection fait :", options:["Beaucoup d'échanges","Peu d'échanges, beaucoup de comparaisons","Aucune comparaison","Une seule passe"], answer:1, exp:"Un échange max par tour." },
+  { q:"Trier une liste chaînée par bulles :", options:["Impossible","On échange les valeurs des nœuds voisins","On supprime des nœuds","On la convertit en pile"], answer:1, exp:"Échange des champs valeur via une variable d'aide." },
+  { q:"En insertion, après avoir décalé, on :", options:["Oublie la clé","Replace la clé à sa position","Supprime la clé","Trie à nouveau"], answer:1, exp:"T[j+1] ← cle." },
+  { q:"Pour de très grands tableaux on préfère :", options:["Bulles","Des tris en O(n log n) (fusion, rapide)","Sélection","Aucun tri"], answer:1, exp:"Bien plus rapides à grande échelle." },
+  { q:"Un tri est dit croissant si :", options:["T[0] le plus grand","Les valeurs augmentent de gauche à droite","Aléatoire","T identique"], answer:1, exp:"Ordre croissant = du plus petit au plus grand." },
+  { q:"Le pire cas du tri par insertion arrive si le tableau est :", options:["Déjà trié","Trié à l'envers","Vide","De taille 1"], answer:1, exp:"Chaque élément doit traverser tout le reste." },
+  { q:"Le point commun bulles/sélection/insertion :", options:["O(n log n)","Simples et en O(n²)","Nécessitent une pile","Trient des listes seulement"], answer:1, exp:"Tris élémentaires quadratiques." }
+];
+</script>
+<script src="../js/data.js"></script><script src="../js/app.js"></script><script src="../js/quiz.js"></script><script src="../js/chapter.js"></script><script src="../js/visualizers/core.js"></script>
+</body></html>

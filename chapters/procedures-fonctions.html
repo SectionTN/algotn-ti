@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Procédures & Fonctions — AlgoTN</title>
+<meta name="description" content="Procédures et fonctions : découper un problème, paramètres, valeur de retour, passage par valeur/adresse, pile d'appels, avec visualiseur d'appels.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%23f59e0b'/><text x='50' y='72' font-size='52' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold'>ƒ</text></svg>">
+<link rel="stylesheet" href="../css/theme.css"><link rel="stylesheet" href="../css/main.css">
+</head>
+<body data-chapter="procedures">
+<div class="readbar"></div>
+<header class="topbar"><div class="topbar__inner">
+  <button class="iconbtn menu-toggle" title="Menu">☰</button>
+  <a class="brand" href="../index.html"><span class="brand__logo">A</span><span>AlgoTN <small>Algorithmique · TI</small></span></a>
+  <nav><a href="../index.html">Accueil</a><a href="../index.html#chapitres" class="active">Chapitres</a><a href="../pages/revision.html">Révision</a><a href="../pages/exercices.html">Exercices</a></nav>
+  <span class="topbar__spacer"></span>
+  <button class="iconbtn" data-search-open title="Rechercher (Ctrl+K)">🔍</button>
+  <button class="iconbtn" data-theme-toggle title="Thème"><span data-theme-icon>🌙</span></button>
+</div></header>
+<div class="layout">
+  <aside class="sidebar">
+    <h4>Chapitres</h4><nav id="chap-nav"></nav>
+    <h4>Dans ce chapitre</h4><nav class="toc" id="toc"></nav>
+    <button class="btn btn--soft btn--sm" id="fav-btn" style="margin-top:14px;width:100%">☆ Mettre en favori</button>
+  </aside>
+  <article class="article">
+    <div class="crumbs"><a href="../index.html">Accueil</a> › <a href="../index.html#chapitres">Chapitres</a> › <span>Procédures & Fonctions</span></div>
+    <span class="lead-chip" style="margin-top:14px">⭐ Chapitre clé d'examen · ƒ Procédures & Fonctions</span>
+    <h1 style="margin-top:12px">Découper pour mieux régner</h1>
+    <p class="lead muted">Un gros algorithme d'un seul bloc, c'est illisible et impossible à corriger. La solution : le découper en petites briques nommées, réutilisables, qu'on appelle quand on en a besoin. Ce sont les <b>procédures</b> et les <b>fonctions</b>. C'est la base de la programmation propre — et un grand classique d'examen.</p>
+
+    <h2 id="pourquoi"><span class="num">1</span> Pourquoi découper ?</h2>
+    <div class="note note--why"><span class="note__ic">🧱</span><div class="note__body"><strong>3 bénéfices.</strong> ① <b>Réutilisation</b> : écrit une fois, appelé partout. ② <b>Lisibilité</b> : <code>SaisirProduits(T, n)</code> dit ce qu'on fait. ③ <b>Correction facile</b> : un bug = une brique à réparer, pas tout le programme.</div></div>
+
+    <h2 id="difference"><span class="num">2</span> Procédure vs Fonction</h2>
+    <p>LA distinction que l'examen adore. Règle simple : une <b>fonction renvoie une valeur</b> (avec <code>Retourner</code>) ; une <b>procédure fait une action</b> (afficher, remplir, modifier) sans forcément renvoyer.</p>
+    <table class="cmp">
+      <tr><th></th><th>Fonction</th><th>Procédure</th></tr>
+      <tr><td>But</td><td>Calculer et <b>renvoyer</b> une valeur</td><td>Effectuer une <b>action</b> (effet)</td></tr>
+      <tr><td>Mot-clé</td><td><code>Fonction … : type</code> + <code>Retourner</code></td><td><code>Procédure …</code></td></tr>
+      <tr><td>Appel</td><td>Dans une expression : <code>m ← max(a,b)</code></td><td>Comme une instruction : <code>Afficher(T)</code></td></tr>
+      <tr><td>Exemple</td><td>somme, max, factorielle</td><td>SaisirProduits, AfficherTableau, Echanger</td></tr>
+    </table>
+    <div class="code"><div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">fonction_vs_procedure.algo</span><button class="code__copy">Copier</button></div>
+      <pre><code data-raw="Fonction max(a, b : entier) : entier      // FONCTION : renvoie
+Début
+    Si (a > b) Alors Retourner a Sinon Retourner b FinSi
+FinFonction
+
+Procédure Afficher(T : Tableau[0..n-1] de entier ; n : entier)   // PROCÉDURE : agit
+Var i : entier
+Début
+    Pour i De 0 À n-1 Faire Ecrire(T[i]) FinPour
+FinProcédure"></code></pre></div>
+
+    <h2 id="parametres"><span class="num">3</span> Paramètres : formels vs effectifs</h2>
+    <ul>
+      <li><b>Paramètres formels</b> : ceux écrits dans la définition (<code>a</code>, <code>b</code>). Ce sont des « cases d'accueil ».</li>
+      <li><b>Paramètres effectifs</b> : les valeurs réelles fournies à l'appel (<code>max(8, 3)</code> → a reçoit 8, b reçoit 3).</li>
+    </ul>
+
+    <h2 id="passage"><span class="num">4</span> Passage par valeur vs par adresse</h2>
+    <p>C'est LE point délicat, lié aux pointeurs.</p>
+    <table class="cmp">
+      <tr><th></th><th>Par valeur</th><th>Par adresse (var)</th></tr>
+      <tr><td>Ce qui passe</td><td>Une <b>copie</b> de la valeur</td><td>L'<b>adresse</b> de la variable</td></tr>
+      <tr><td>Modif visible chez l'appelant ?</td><td>❌ Non (on modifie la copie)</td><td>✅ Oui (on modifie l'original)</td></tr>
+      <tr><td>Mot-clé</td><td>(rien)</td><td><code>var</code> devant le paramètre</td></tr>
+      <tr><td>Pour</td><td>Données en lecture seule</td><td>Résultats à renvoyer, échange, remplissage</td></tr>
+    </table>
+    <div class="note note--exam"><span class="note__ic">🎯</span><div class="note__body"><strong>Le réflexe d'examen.</strong> Une procédure qui doit <b>remplir</b> ou <b>modifier</b> un tableau/une variable de l'appelant met <code>var</code> devant ce paramètre (passage par adresse). Sinon, elle travaille sur une copie et l'appelant ne voit rien changer. C'est pour ça qu'<code>Echanger</code> a besoin de <code>var a, var b</code>.</div></div>
+
+    <h2 id="visualiseur"><span class="num">5</span> Visualiseur d'appels</h2>
+    <p>Regarde le programme principal appeler une fonction/procédure : la pile d'appels grandit, les paramètres prennent leurs valeurs, puis l'appel <b>retourne</b> (valeur) ou produit un <b>effet de bord</b> (procédure var).</p>
+    <div data-viz-calls></div>
+
+    <h2 id="exemple"><span class="num">6</span> Programme complet (exemple type examen)</h2>
+    <p>Saisir N produits, les afficher, augmenter les prix d'un taux. C'est exactement la structure attendue : des procédures/fonctions appelées par un principal.</p>
+    <div class="code"><div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">gestion_produits.algo</span><button class="code__copy">Copier</button></div>
+      <pre><code data-raw="Type Produit = Enregistrement code:entier ; nom:chaine ; prix:reel FinEnregistrement
+
+Procédure SaisirProduits(var T : Tableau[0..n-1] de Produit ; n : entier)
+Var i : entier
+Début
+    Pour i De 0 À n-1 Faire
+        Lire(T[i].code) ; Lire(T[i].nom) ; Lire(T[i].prix)
+    FinPour
+FinProcédure
+
+Procédure MajPrix(var T : Tableau[0..n-1] de Produit ; n : entier ; taux : reel)
+Var i : entier
+Début
+    Pour i De 0 À n-1 Faire
+        T[i].prix <- T[i].prix * (1 + taux)
+    FinPour
+FinProcédure
+
+// Programme principal
+Début
+    Lire(N) ; Lire(taux)
+    SaisirProduits(T, N)
+    MajPrix(T, N, taux)
+Fin"></code></pre></div>
+
+    <h2 id="portee"><span class="num">7</span> Portée des variables (locales vs globales)</h2>
+    <ul>
+      <li><b>Variable locale</b> : déclarée dans la fonction, elle n'existe que pendant son exécution.</li>
+      <li>Les paramètres sont des variables locales initialisées par l'appel.</li>
+      <li>Deux fonctions peuvent utiliser une variable <code>i</code> sans se gêner : ce sont des <code>i</code> différents.</li>
+    </ul>
+
+    <h2 id="erreurs"><span class="num">8</span> Erreurs fréquentes</h2>
+    <ul>
+      <li>Oublier <code>Retourner</code> dans une fonction (elle ne renvoie rien).</li>
+      <li>Utiliser une procédure dans une expression (<code>x ← Afficher(T)</code> n'a pas de sens).</li>
+      <li>Oublier <code>var</code> alors qu'on doit modifier l'argument → l'appelant ne voit aucun changement.</li>
+      <li>Nombre/ordre/type des paramètres effectifs ≠ formels.</li>
+    </ul>
+
+    <h2 id="exercices"><span class="num">9</span> Exercices corrigés</h2>
+    <div class="exo"><div class="exo__head"><span class="pill pill--facile">Facile</span><h4>Fonction carré</h4></div>
+      <p class="exo__statement">Écris une fonction qui renvoie le carré d'un entier.</p>
+      <button class="btn btn--soft btn--sm exo__toggle" data-exo-toggle>▼ Voir la correction</button>
+      <div class="exo__sol"><div class="code"><div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">carre.algo</span><button class="code__copy">Copier</button></div>
+        <pre><code data-raw="Fonction carre(x : entier) : entier
+Début
+    Retourner x * x
+FinFonction"></code></pre></div></div></div>
+    <div class="exo"><div class="exo__head"><span class="pill pill--moyen">Moyen</span><span class="pill pill--examen">Examen</span><h4>Procédure d'échange</h4></div>
+      <p class="exo__statement">Écris une procédure qui échange deux entiers a et b chez l'appelant.</p>
+      <button class="btn btn--soft btn--sm exo__toggle" data-exo-toggle>▼ Voir la correction</button>
+      <div class="exo__sol"><div class="exo__step"><b>Clé.</b> <code>var</code> sur a ET b (passage par adresse), sinon l'échange reste local.</div><div class="code"><div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">echanger.algo</span><button class="code__copy">Copier</button></div>
+        <pre><code data-raw="Procédure Echanger(var a : entier ; var b : entier)
+Var aux : entier
+Début
+    aux <- a
+    a <- b
+    b <- aux
+FinProcédure"></code></pre></div></div></div>
+    <div class="exo"><div class="exo__head"><span class="pill pill--moyen">Moyen</span><span class="pill pill--examen">TD4</span><h4>Fonction prix d'une commande</h4></div>
+      <p class="exo__statement">Écris une fonction qui renvoie le prix total d'une commande (somme de prix×quantité de ses articles).</p>
+      <button class="btn btn--soft btn--sm exo__toggle" data-exo-toggle>▼ Voir la correction</button>
+      <div class="exo__sol"><div class="code"><div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">prix_commande.algo</span><button class="code__copy">Copier</button></div>
+        <pre><code data-raw="Fonction PrixCommande(T : Tableau[0..n-1] de Article ; n : entier) : reel
+Var i : entier ; total : reel
+Début
+    total <- 0
+    Pour i De 0 À n-1 Faire
+        total <- total + T[i].prix * T[i].quantite
+    FinPour
+    Retourner total
+FinFonction"></code></pre></div></div></div>
+
+    <h2 id="qcm"><span class="num">10</span> QCM</h2>
+    <div class="quiz" data-quiz="procedures" data-time="600"></div>
+
+    <h2 id="resume"><span class="num">11</span> Mini-résumé</h2>
+    <div class="card" style="background:var(--surface-2)"><ul style="margin-top:0">
+      <li>Fonction = <b>renvoie</b> une valeur (Retourner) ; Procédure = <b>agit</b>.</li>
+      <li>Paramètres formels (définition) ≠ effectifs (appel).</li>
+      <li>Par valeur = copie (lecture) ; par adresse (<code>var</code>) = modifie l'original.</li>
+      <li>Pour remplir/modifier/échanger ⟹ <code>var</code>.</li>
+      <li>Chaque appel crée un cadre sur la pile, détruit au retour.</li>
+    </ul></div>
+    <div id="prevnext" style="display:flex;gap:14px;margin-top:34px;flex-wrap:wrap"></div>
+  </article>
+</div>
+<footer class="footer"><div class="footer__inner"><div><b class="grad-text">AlgoTN</b> — Programme Algorithmique & Structures de Données, TI.</div><div>100% hors-ligne · Ta progression reste sur ton appareil.</div></div></footer>
+<button class="iconbtn totop" title="Haut de page">↑</button>
+<div class="search-modal"><div class="search-box"><input type="text" placeholder="Rechercher… (Échap pour fermer)"><div class="search-results"></div></div></div>
+<script>
+window.ALGOTN_QUIZ = [
+  { q:"Différence fonction / procédure :", options:["Aucune","Fonction renvoie une valeur, procédure fait une action","Procédure renvoie, fonction agit","La fonction est plus lente"], answer:1, exp:"Fonction → Retourner une valeur ; procédure → effet." },
+  { q:"Quel mot-clé renvoie une valeur ?", options:["Ecrire","Retourner","Lire","Allouer"], answer:1, exp:"Retourner termine la fonction avec un résultat." },
+  { q:"Une fonction s'appelle :", options:["Comme une instruction seule","Dans une expression (m ← max(a,b))","Avec var","Jamais"], answer:1, exp:"Son résultat s'utilise dans un calcul/affectation." },
+  { q:"Passage par valeur signifie :", options:["On passe l'adresse","On passe une copie","On modifie l'original","On renvoie"], answer:1, exp:"La fonction travaille sur une copie." },
+  { q:"Passage par adresse (var) permet :", options:["Rien de spécial","De modifier la variable de l'appelant","D'aller plus vite","De renvoyer 2 valeurs interdites"], answer:1, exp:"On agit sur l'original via son adresse." },
+  { q:"Pour échanger deux variables dans une procédure :", options:["Par valeur","Par adresse (var a, var b)","Sans paramètres","Avec Retourner"], answer:1, exp:"Sinon l'échange reste local." },
+  { q:"Paramètres formels =", options:["Valeurs de l'appel","Ceux écrits dans la définition","La pile","Le retour"], answer:1, exp:"Les 'cases d'accueil' de la définition." },
+  { q:"Paramètres effectifs =", options:["Ceux de la définition","Les valeurs réelles fournies à l'appel","Les variables globales","Le type"], answer:1, exp:"Les arguments passés lors de l'appel." },
+  { q:"Une variable locale :", options:["Existe partout","N'existe que dans sa fonction","Est globale","Est une constante"], answer:1, exp:"Portée limitée à la fonction/procédure." },
+  { q:"Oublier Retourner dans une fonction :", options:["N'a aucun effet","La fonction ne renvoie pas le résultat attendu","Crée une boucle","Améliore la vitesse"], answer:1, exp:"Elle calcule mais ne remonte rien d'exploitable." },
+  { q:"SaisirProduits(var T, n) utilise var car :", options:["Esthétique","Elle doit remplir T chez l'appelant","T est constant","Pour aller vite"], answer:1, exp:"Remplir = modifier l'original → par adresse." },
+  { q:"Chaque appel de fonction crée :", options:["Un fichier","Un cadre sur la pile d'appels","Un tableau","Une boucle"], answer:1, exp:"Détruit au retour de la fonction." },
+  { q:"Découper en sous-programmes améliore :", options:["Rien","Réutilisation, lisibilité, correction","La taille du fichier seulement","La vitesse réseau"], answer:1, exp:"Les 3 grands bénéfices." },
+  { q:"m ← Afficher(T) où Afficher est une procédure :", options:["Correct","Incorrect (une procédure ne renvoie pas de valeur)","Affiche m","Trie T"], answer:1, exp:"On n'affecte pas le résultat d'une procédure." },
+  { q:"Le nombre/type des paramètres effectifs doit :", options:["Être quelconque","Correspondre aux paramètres formels","Être supérieur","Être nul"], answer:1, exp:"Correspondance obligatoire à l'appel." },
+  { q:"max(a,b:entier):entier est :", options:["Une procédure","Une fonction (renvoie un entier)","Une variable","Une constante"], answer:1, exp:"Le ': entier' final indique le type renvoyé." },
+  { q:"Une procédure peut-elle modifier plusieurs variables de l'appelant ?", options:["Non","Oui, via plusieurs paramètres var","Une seule","Jamais"], answer:1, exp:"Autant de var que de résultats à renvoyer." },
+  { q:"Donnée en lecture seule dans un sous-programme : passage", options:["Par adresse","Par valeur (copie)","Avec var","Global"], answer:1, exp:"Pas besoin de modifier l'original." },
+  { q:"PrixCommande renvoie un réel donc c'est :", options:["Une procédure","Une fonction","Une boucle","Un type"], answer:1, exp:"Elle Retourne une valeur (le total)." },
+  { q:"Le programme principal sert à :", options:["Déclarer les types seulement","Orchestrer les appels aux sous-programmes","Trier","Rien"], answer:1, exp:"Il lit les données et appelle procédures/fonctions." }
+];
+</script>
+<script src="../js/data.js"></script><script src="../js/app.js"></script><script src="../js/quiz.js"></script><script src="../js/chapter.js"></script><script src="../js/visualizers/core.js"></script>
+</body></html>

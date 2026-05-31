@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La complexité — AlgoTN</title>
+<meta name="description" content="Complexité algorithmique : notation O, O(1), O(log n), O(n), O(n log n), O(n²), pourquoi un algorithme est rapide ou lent, avec graphique comparatif.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%23334155'/><text x='50' y='70' font-size='52' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold'>𝒪</text></svg>">
+<link rel="stylesheet" href="../css/theme.css"><link rel="stylesheet" href="../css/main.css">
+</head>
+<body data-chapter="complexite">
+<div class="readbar"></div>
+<header class="topbar"><div class="topbar__inner">
+  <button class="iconbtn menu-toggle" title="Menu">☰</button>
+  <a class="brand" href="../index.html"><span class="brand__logo">A</span><span>AlgoTN <small>Algorithmique · TI</small></span></a>
+  <nav><a href="../index.html">Accueil</a><a href="../index.html#chapitres" class="active">Chapitres</a><a href="../pages/revision.html">Révision</a><a href="../pages/exercices.html">Exercices</a></nav>
+  <span class="topbar__spacer"></span>
+  <button class="iconbtn" data-search-open title="Rechercher (Ctrl+K)">🔍</button>
+  <button class="iconbtn" data-theme-toggle title="Thème"><span data-theme-icon>🌙</span></button>
+</div></header>
+<div class="layout">
+  <aside class="sidebar">
+    <h4>Chapitres</h4><nav id="chap-nav"></nav>
+    <h4>Dans ce chapitre</h4><nav class="toc" id="toc"></nav>
+    <button class="btn btn--soft btn--sm" id="fav-btn" style="margin-top:14px;width:100%">☆ Mettre en favori</button>
+  </aside>
+  <article class="article">
+    <div class="crumbs"><a href="../index.html">Accueil</a> › <a href="../index.html#chapitres">Chapitres</a> › <span>Complexité</span></div>
+    <span class="lead-chip" style="margin-top:14px">𝒪 La complexité</span>
+    <h1 style="margin-top:12px">Pourquoi un algorithme est rapide… ou lent</h1>
+    <p class="lead muted">Deux algorithmes peuvent donner le même résultat, mais l'un en une seconde et l'autre en une heure. La complexité mesure comment le <b>temps de calcul grandit</b> quand les données grandissent. C'est ce qui sépare un programme utilisable d'un programme inutilisable.</p>
+
+    <h2 id="idee"><span class="num">1</span> L'idée : comment ça « scale » ?</h2>
+    <div class="note note--why"><span class="note__ic">📈</span><div class="note__body"><strong>On ne compte pas les secondes.</strong> Le temps dépend de la machine. On compte le <b>nombre d'opérations</b> en fonction de la taille des données <b>n</b>, et surtout comment ce nombre grandit quand n explose. C'est la notation « grand O ».</div></div>
+
+    <h2 id="notation"><span class="num">2</span> La notation O()</h2>
+    <p>On garde seulement le terme qui domine quand n est grand, sans les constantes. Exemple : 3n + 5 → <b>O(n)</b> ; 2n² + 10n → <b>O(n²)</b>.</p>
+    <table class="cmp">
+      <tr><th>Notation</th><th>Nom</th><th>Exemple typique</th></tr>
+      <tr><td><code>O(1)</code></td><td>Constant</td><td>Accès T[i], push/pop d'une pile</td></tr>
+      <tr><td><code>O(log n)</code></td><td>Logarithmique</td><td>Recherche dichotomique</td></tr>
+      <tr><td><code>O(n)</code></td><td>Linéaire</td><td>Parcours d'un tableau/liste, recherche séquentielle</td></tr>
+      <tr><td><code>O(n log n)</code></td><td>Quasi-linéaire</td><td>Tris rapides (fusion, rapide)</td></tr>
+      <tr><td><code>O(n²)</code></td><td>Quadratique</td><td>Tris simples, double boucle imbriquée</td></tr>
+    </table>
+
+    <h2 id="visualiseur"><span class="num">3</span> Graphique comparatif</h2>
+    <p>Fais glisser n et regarde le nombre d'opérations. À n=64, O(log n) ≈ 6 alors que O(n²) ≈ 4096. La différence devient gigantesque !</p>
+    <div data-viz-complexity></div>
+
+    <h2 id="lire"><span class="num">4</span> Lire la complexité d'un code</h2>
+    <ul>
+      <li>Une instruction simple (affectation, comparaison) → <b>O(1)</b>.</li>
+      <li>Une boucle de 0 à n → <b>O(n)</b>.</li>
+      <li>Deux boucles <b>imbriquées</b> sur n → <b>O(n²)</b>.</li>
+      <li>On divise le problème par 2 à chaque étape → <b>O(log n)</b>.</li>
+    </ul>
+    <div class="code"><div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">exemples.algo</span><button class="code__copy">Copier</button></div>
+      <pre><code data-raw="x <- T[5]                          // O(1)
+Pour i De 0 À n-1 Faire ... FinPour // O(n)
+Pour i ... Faire Pour j ... FinPour // O(n²) : boucles imbriquées"></code></pre></div>
+
+    <h2 id="exemples"><span class="num">5</span> Cas du cours</h2>
+    <table class="cmp">
+      <tr><th>Algorithme</th><th>Complexité</th></tr>
+      <tr><td>Accès T[i] (tableau)</td><td>O(1)</td></tr>
+      <tr><td>Recherche séquentielle</td><td>O(n)</td></tr>
+      <tr><td>Recherche dichotomique (trié)</td><td>O(log n)</td></tr>
+      <tr><td>Parcours d'une liste chaînée</td><td>O(n)</td></tr>
+      <tr><td>Tri à bulles / sélection / insertion</td><td>O(n²)</td></tr>
+      <tr><td>factorielle(n) récursive</td><td>O(n)</td></tr>
+      <tr><td>fibonacci(n) récursif naïf</td><td>O(2ⁿ)</td></tr>
+    </table>
+
+    <h2 id="erreurs"><span class="num">6</span> Erreurs fréquentes</h2>
+    <ul>
+      <li>Garder les constantes (O(2n) s'écrit O(n)).</li>
+      <li>Croire qu'« ça marche sur mon petit exemple » suffit : tester avec un grand n.</li>
+      <li>Confondre une boucle qui divise par 2 (log n) et une qui décrémente de 1 (n).</li>
+      <li>Oublier que la dichotomie exige un tableau trié.</li>
+    </ul>
+    <div class="note note--exam"><span class="note__ic">🎯</span><div class="note__body"><strong>Astuce examen.</strong> Pour donner la complexité : compte les boucles. Une boucle sur n = O(n). Deux imbriquées = O(n²). Division par moitié = O(log n). Garde le terme dominant, oublie les constantes.</div></div>
+
+    <h2 id="qcm"><span class="num">7</span> QCM</h2>
+    <div class="quiz" data-quiz="complexite" data-time="420"></div>
+
+    <h2 id="resume"><span class="num">8</span> Mini-résumé</h2>
+    <div class="card" style="background:var(--surface-2)"><ul style="margin-top:0">
+      <li>La complexité mesure la croissance du nombre d'opérations selon n.</li>
+      <li>Ordre : O(1) &lt; O(log n) &lt; O(n) &lt; O(n log n) &lt; O(n²) &lt; O(2ⁿ).</li>
+      <li>Boucle simple = O(n) ; imbriquée = O(n²) ; division par 2 = O(log n).</li>
+      <li>On garde le terme dominant, sans les constantes.</li>
+    </ul></div>
+    <div id="prevnext" style="display:flex;gap:14px;margin-top:34px;flex-wrap:wrap"></div>
+  </article>
+</div>
+<footer class="footer"><div class="footer__inner"><div><b class="grad-text">AlgoTN</b> — Programme Algorithmique & Structures de Données, TI.</div><div>100% hors-ligne · Bravo, tu as parcouru tout le programme ! 🎓</div></div></footer>
+<button class="iconbtn totop" title="Haut de page">↑</button>
+<div class="search-modal"><div class="search-box"><input type="text" placeholder="Rechercher… (Échap pour fermer)"><div class="search-results"></div></div></div>
+<script>
+window.ALGOTN_QUIZ = [
+  { q:"La complexité mesure :", options:["Le nombre de lignes","La croissance des opérations selon n","La taille du fichier","La couleur du code"], answer:1, exp:"Comment le coût grandit avec les données." },
+  { q:"O(1) signifie :", options:["Une seule donnée","Temps constant (indépendant de n)","Très lent","O(n)"], answer:1, exp:"Coût fixe, ex : accès T[i]." },
+  { q:"La recherche dichotomique est en :", options:["O(n)","O(log n)","O(1)","O(n²)"], answer:1, exp:"On divise par 2 à chaque étape." },
+  { q:"Un parcours de tableau de n cases est en :", options:["O(1)","O(n)","O(log n)","O(n²)"], answer:1, exp:"Une opération par case." },
+  { q:"Deux boucles imbriquées sur n donnent :", options:["O(n)","O(n²)","O(log n)","O(1)"], answer:1, exp:"n × n opérations." },
+  { q:"O(2n) s'écrit :", options:["O(2n)","O(n) (on enlève la constante)","O(n²)","O(1)"], answer:1, exp:"On ignore les constantes multiplicatives." },
+  { q:"Quel est le plus rapide pour grand n ?", options:["O(n²)","O(log n)","O(n)","O(2ⁿ)"], answer:1, exp:"Logarithmique = très peu d'opérations." },
+  { q:"Les tris simples (bulles, sélection, insertion) sont en :", options:["O(n)","O(n²)","O(log n)","O(1)"], answer:1, exp:"Comparaisons proportionnelles à n²." },
+  { q:"fibonacci récursif naïf est en :", options:["O(n)","O(2ⁿ)","O(log n)","O(1)"], answer:1, exp:"Recalculs exponentiels." },
+  { q:"factorielle(n) récursive est en :", options:["O(1)","O(n)","O(n²)","O(2ⁿ)"], answer:1, exp:"n appels en chaîne." },
+  { q:"Ordre croissant de coût :", options:["O(n²) < O(n) < O(1)","O(1) < O(log n) < O(n) < O(n²)","O(n) < O(1)","tous égaux"], answer:1, exp:"Du moins cher au plus cher." },
+  { q:"Une boucle qui divise n par 2 à chaque tour est en :", options:["O(n)","O(log n)","O(n²)","O(1)"], answer:1, exp:"Nombre d'étapes ≈ log2(n)." },
+  { q:"Pourquoi ne pas compter en secondes ?", options:["Trop facile","Ça dépend de la machine ; O() est universel","C'est interdit","Les secondes n'existent pas"], answer:1, exp:"O() mesure la croissance, indépendante du matériel." },
+  { q:"Accès direct T[i] dans un tableau :", options:["O(n)","O(1)","O(log n)","O(n²)"], answer:1, exp:"Calcul direct d'adresse." },
+  { q:"Pour donner la complexité d'un code, on regarde surtout :", options:["Les commentaires","Le nombre et l'imbrication des boucles","Les noms de variables","La longueur"], answer:1, exp:"Les boucles dominent le coût." }
+];
+</script>
+<script src="../js/data.js"></script><script src="../js/app.js"></script><script src="../js/quiz.js"></script><script src="../js/chapter.js"></script><script src="../js/visualizers/core.js"></script>
+</body></html>

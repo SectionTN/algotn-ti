@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Les enregistrements — AlgoTN</title>
+<meta name="description" content="Enregistrements (structures) : regrouper des champs de types différents, tableaux d'enregistrements, accès par le point.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%23ec4899'/><text x='50' y='72' font-size='52' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold'>▤</text></svg>">
+<link rel="stylesheet" href="../css/theme.css"><link rel="stylesheet" href="../css/main.css">
+</head>
+<body data-chapter="enregistrements">
+<div class="readbar"></div>
+<header class="topbar"><div class="topbar__inner">
+  <button class="iconbtn menu-toggle" title="Menu">☰</button>
+  <a class="brand" href="../index.html"><span class="brand__logo">A</span><span>AlgoTN <small>Algorithmique · TI</small></span></a>
+  <nav><a href="../index.html">Accueil</a><a href="../index.html#chapitres" class="active">Chapitres</a><a href="../pages/revision.html">Révision</a><a href="../pages/exercices.html">Exercices</a></nav>
+  <span class="topbar__spacer"></span>
+  <button class="iconbtn" data-search-open title="Rechercher (Ctrl+K)">🔍</button>
+  <button class="iconbtn" data-theme-toggle title="Thème"><span data-theme-icon>🌙</span></button>
+</div></header>
+<div class="layout">
+  <aside class="sidebar">
+    <h4>Chapitres</h4><nav id="chap-nav"></nav>
+    <h4>Dans ce chapitre</h4><nav class="toc" id="toc"></nav>
+    <button class="btn btn--soft btn--sm" id="fav-btn" style="margin-top:14px;width:100%">☆ Mettre en favori</button>
+  </aside>
+  <article class="article">
+    <div class="crumbs"><a href="../index.html">Accueil</a> › <a href="../index.html#chapitres">Chapitres</a> › <span>Enregistrements</span></div>
+    <span class="lead-chip" style="margin-top:14px">▤ Les enregistrements</span>
+    <h1 style="margin-top:12px">Regrouper ce qui va ensemble</h1>
+    <p class="lead muted">Un étudiant a un nom (chaîne), un âge (entier) et une moyenne (réel). Trois infos de types différents, mais qui décrivent UNE même chose. L'enregistrement (ou « structure ») les réunit sous un seul nom. C'est la brique des bases de données et des listes chaînées.</p>
+
+    <h2 id="definition"><span class="num">1</span> Définir un enregistrement</h2>
+    <p>Contrairement au tableau (cases du même type), l'enregistrement regroupe des <b>champs</b> de types <b>différents</b>.</p>
+    <div class="code"><div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">type.algo</span><button class="code__copy">Copier</button></div>
+      <pre><code data-raw="Type Etudiant = Enregistrement
+    nom : chaine
+    age : entier
+    moyenne : reel
+FinEnregistrement
+
+Var e : Etudiant"></code></pre></div>
+
+    <h2 id="acces"><span class="num">2</span> Accéder aux champs : le point</h2>
+    <p>On atteint un champ avec la notation <b>point</b> : <code>variable.champ</code>.</p>
+    <div class="code"><div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">acces.algo</span><button class="code__copy">Copier</button></div>
+      <pre><code data-raw="e.nom <- ""Sami""
+e.age <- 20
+e.moyenne <- 14.5
+Ecrire(e.nom, "" a "", e.moyenne)"></code></pre></div>
+    <div data-viz-record></div>
+
+    <h2 id="tableau"><span class="num">3</span> Tableau d'enregistrements (le combo gagnant)</h2>
+    <p>Gérer 100 étudiants ? Un <b>tableau d'enregistrements</b> : chaque case est un étudiant complet. C'est la structure typique des sujets de gestion (produits, véhicules, articles…).</p>
+    <div class="code"><div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">tableau_struct.algo</span><button class="code__copy">Copier</button></div>
+      <pre><code data-raw="Var classe : Tableau[0..n-1] de Etudiant
+Début
+    classe[0].nom <- ""Ali""
+    classe[0].moyenne <- 16
+    Ecrire(classe[0].nom)   // Ali
+Fin"></code></pre></div>
+    <div class="note note--intui"><span class="note__ic">🔗</span><div class="note__body"><strong>Pont vers les listes chaînées.</strong> Un nœud de liste chaînée EST un enregistrement : un champ donnée + un champ <code>suivant</code> (pointeur). Maîtriser les enregistrements, c'est déjà préparer les listes.</div></div>
+
+    <h2 id="erreurs"><span class="num">4</span> Erreurs fréquentes</h2>
+    <ul>
+      <li>Oublier le point : écrire <code>e</code> au lieu de <code>e.nom</code>.</li>
+      <li>Confondre le <b>type</b> (Etudiant) et la <b>variable</b> (e).</li>
+      <li>Pour un tableau d'enregistrements : oublier l'indice <b>et</b> le champ (<code>classe[i].nom</code>).</li>
+      <li>Mauvais type de champ (mettre une chaîne dans un champ entier).</li>
+    </ul>
+    <div class="note note--exam"><span class="note__ic">🎯</span><div class="note__body"><strong>Astuce examen.</strong> Sur un sujet de gestion : ① définis le type Enregistrement, ② déclare un tableau de ce type, ③ écris une procédure <code>Saisir(var T, n)</code> et une <code>Afficher(T, n)</code>, ④ ajoute les traitements demandés. Structure quasi systématique.</div></div>
+
+    <h2 id="exercices"><span class="num">5</span> Exercices corrigés</h2>
+    <div class="exo"><div class="exo__head"><span class="pill pill--moyen">Moyen</span><span class="pill pill--examen">Examen</span><h4>Type Produit + saisie</h4></div>
+      <p class="exo__statement">Définis le type Produit (code, nom, prix) puis une procédure qui saisit un tableau de N produits.</p>
+      <button class="btn btn--soft btn--sm exo__toggle" data-exo-toggle>▼ Voir la correction</button>
+      <div class="exo__sol"><div class="code"><div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">produits.algo</span><button class="code__copy">Copier</button></div>
+        <pre><code data-raw="Type Produit = Enregistrement code:entier ; nom:chaine ; prix:reel FinEnregistrement
+
+Procédure SaisirProduits(var T : Tableau[0..n-1] de Produit ; n : entier)
+Var i : entier
+Début
+    Pour i De 0 À n-1 Faire
+        Lire(T[i].code) ; Lire(T[i].nom) ; Lire(T[i].prix)
+    FinPour
+FinProcédure"></code></pre></div></div></div>
+    <div class="exo"><div class="exo__head"><span class="pill pill--moyen">Moyen</span><h4>Compter les voitures disponibles</h4></div>
+      <p class="exo__statement">Tableau de véhicules avec un champ booléen <code>disponible</code>. Compter combien sont disponibles.</p>
+      <button class="btn btn--soft btn--sm exo__toggle" data-exo-toggle>▼ Voir la correction</button>
+      <div class="exo__sol"><div class="code"><div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">dispo.algo</span><button class="code__copy">Copier</button></div>
+        <pre><code data-raw="Fonction NbDispo(T : Tableau[0..n-1] de Vehicule ; n : entier) : entier
+Var i, c : entier
+Début
+    c <- 0
+    Pour i De 0 À n-1 Faire
+        Si (T[i].disponible = Vrai) Alors c <- c + 1 FinSi
+    FinPour
+    Retourner c
+FinFonction"></code></pre></div></div></div>
+
+    <h2 id="qcm"><span class="num">6</span> QCM</h2>
+    <div class="quiz" data-quiz="enregistrements" data-time="420"></div>
+
+    <h2 id="resume"><span class="num">7</span> Mini-résumé</h2>
+    <div class="card" style="background:var(--surface-2)"><ul style="margin-top:0">
+      <li>Enregistrement = champs de types <b>différents</b> sous un nom.</li>
+      <li>Accès par le <b>point</b> : <code>e.champ</code>.</li>
+      <li>Tableau d'enregistrements = base des sujets de gestion.</li>
+      <li>Un nœud de liste chaînée est un enregistrement (donnée + suivant).</li>
+    </ul></div>
+    <div id="prevnext" style="display:flex;gap:14px;margin-top:34px;flex-wrap:wrap"></div>
+  </article>
+</div>
+<footer class="footer"><div class="footer__inner"><div><b class="grad-text">AlgoTN</b> — Programme Algorithmique & Structures de Données, TI.</div><div>100% hors-ligne · Ta progression reste sur ton appareil.</div></div></footer>
+<button class="iconbtn totop" title="Haut de page">↑</button>
+<div class="search-modal"><div class="search-box"><input type="text" placeholder="Rechercher… (Échap pour fermer)"><div class="search-results"></div></div></div>
+<script>
+window.ALGOTN_QUIZ = [
+  { q:"Un enregistrement regroupe des champs :", options:["Du même type","De types différents","Sans type","Uniquement entiers"], answer:1, exp:"Contrairement au tableau, les types peuvent différer." },
+  { q:"On accède à un champ avec :", options:["[ ]","Le point : e.champ","^","&"], answer:1, exp:"Notation point : variable.champ." },
+  { q:"Type vs variable :", options:["Identiques","Type = modèle (Etudiant), variable = instance (e)","Variable = modèle","Aucun"], answer:1, exp:"Le type décrit la structure ; la variable en est une occurrence." },
+  { q:"Dans un tableau d'enregistrements, T[i].nom est :", options:["Le i-ème caractère","Le champ nom du i-ème élément","La taille","Une erreur"], answer:1, exp:"Indice + champ." },
+  { q:"Un nœud de liste chaînée est :", options:["Un tableau","Un enregistrement (donnée + suivant)","Un entier","Une boucle"], answer:1, exp:"Champ donnée + champ pointeur suivant." },
+  { q:"Pour gérer 50 étudiants on utilise :", options:["50 variables","Un tableau d'enregistrements","Une seule variable","Une constante"], answer:1, exp:"Tableau de type Etudiant." },
+  { q:"Définir le type se fait dans la section :", options:["Début","Type","Var seulement","Fin"], answer:1, exp:"Section Type (puis Var pour déclarer)." },
+  { q:"e.age <- 20 :", options:["Compare","Affecte 20 au champ age de e","Déclare","Lit"], answer:1, exp:"Affectation d'un champ." },
+  { q:"Les champs peuvent être :", options:["Seulement des entiers","De n'importe quel type (entier, chaîne, réel, booléen…)","Seulement des chaînes","Des pointeurs uniquement"], answer:1, exp:"Hétérogènes par nature." },
+  { q:"Un champ peut-il lui-même être un enregistrement ?", options:["Non","Oui (enregistrements imbriqués)","Seulement entier","Jamais"], answer:1, exp:"Ex : un champ date = enregistrement (jour, mois, an)." },
+  { q:"Saisir un tableau de produits nécessite :", options:["var sur le tableau (modifié)","par valeur","aucun paramètre","Retourner"], answer:0, exp:"On remplit l'original → passage par adresse." },
+  { q:"Compter selon un champ booléen utilise :", options:["Un tri","Un compteur incrémenté dans une boucle","Un pointeur","Une file"], answer:1, exp:"Accumulateur quand disponible = Vrai." },
+  { q:"oublier le point (écrire e au lieu de e.nom) :", options:["Marche quand même","Est une erreur (on désigne tout l'enregistrement)","Trie","Affiche le champ"], answer:1, exp:"Il faut préciser le champ." },
+  { q:"Un enregistrement est utile pour :", options:["Répéter","Décrire une entité (produit, étudiant…)","Boucler","Comparer"], answer:1, exp:"Modéliser un objet du monde réel." },
+  { q:"classe[i].moyenne <- 16 modifie :", options:["Tout le tableau","La moyenne du i-ème étudiant","L'indice","Le type"], answer:1, exp:"Un champ d'un élément précis." }
+];
+</script>
+<script src="../js/data.js"></script><script src="../js/app.js"></script><script src="../js/quiz.js"></script><script src="../js/chapter.js"></script><script src="../js/visualizers/core.js"></script>
+</body></html>

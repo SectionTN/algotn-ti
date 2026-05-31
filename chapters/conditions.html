@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Les conditions — AlgoTN</title>
+<meta name="description" content="SI…ALORS…SINON et SELON CAS : faire prendre des décisions à la machine, avec simulateur de chemin d'exécution.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%233b82f6'/><text x='50' y='72' font-size='52' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold'>⑂</text></svg>">
+<link rel="stylesheet" href="../css/theme.css"><link rel="stylesheet" href="../css/main.css">
+</head>
+<body data-chapter="conditions">
+<div class="readbar"></div>
+<header class="topbar"><div class="topbar__inner">
+  <button class="iconbtn menu-toggle" title="Menu">☰</button>
+  <a class="brand" href="../index.html"><span class="brand__logo">A</span><span>AlgoTN <small>Algorithmique · TI</small></span></a>
+  <nav><a href="../index.html">Accueil</a><a href="../index.html#chapitres" class="active">Chapitres</a><a href="../pages/revision.html">Révision</a><a href="../pages/exercices.html">Exercices</a></nav>
+  <span class="topbar__spacer"></span>
+  <button class="iconbtn" data-search-open title="Rechercher (Ctrl+K)">🔍</button>
+  <button class="iconbtn" data-theme-toggle title="Thème"><span data-theme-icon>🌙</span></button>
+</div></header>
+<div class="layout">
+  <aside class="sidebar">
+    <h4>Chapitres</h4><nav id="chap-nav"></nav>
+    <h4>Dans ce chapitre</h4><nav class="toc" id="toc"></nav>
+    <button class="btn btn--soft btn--sm" id="fav-btn" style="margin-top:14px;width:100%">☆ Mettre en favori</button>
+  </aside>
+  <article class="article">
+    <div class="crumbs"><a href="../index.html">Accueil</a> › <a href="../index.html#chapitres">Chapitres</a> › <span>Conditions</span></div>
+    <span class="lead-chip" style="margin-top:14px">⑂ Les conditions</span>
+    <h1 style="margin-top:12px">Apprendre à la machine à décider</h1>
+    <p class="lead muted">Jusqu'ici, l'algorithme exécutait tout, dans l'ordre, à chaque fois. Avec les conditions, il peut <b>choisir</b> : faire ceci OU cela selon une situation. C'est ce qui rend un programme « intelligent ».</p>
+
+    <h2 id="si"><span class="num">1</span> SI … ALORS … SINON</h2>
+    <p>On teste une <b>condition</b> (qui vaut Vrai ou Faux). Si elle est vraie, on exécute le bloc ALORS ; sinon, le bloc SINON.</p>
+    <div class="code"><div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">si.algo</span><button class="code__copy">Copier</button></div>
+      <pre><code data-raw="Si (age >= 18) Alors
+    Ecrire(""Majeur"")
+Sinon
+    Ecrire(""Mineur"")
+FinSi"></code></pre></div>
+    <div class="note note--intui"><span class="note__ic">🔀</span><div class="note__body"><strong>Un seul chemin est pris.</strong> Soit ALORS, soit SINON, jamais les deux. Le SINON est optionnel (parfois on ne fait rien si c'est faux).</div></div>
+
+    <h2 id="operateurs"><span class="num">2</span> Conditions &amp; opérateurs</h2>
+    <table class="cmp">
+      <tr><th>Type</th><th>Opérateurs</th></tr>
+      <tr><td>Comparaison</td><td><code>=</code> <code>≠</code> <code>&lt;</code> <code>&gt;</code> <code>≤</code> <code>≥</code></td></tr>
+      <tr><td>Logiques</td><td><code>et</code> · <code>ou</code> · <code>non</code></td></tr>
+    </table>
+    <div class="note note--tip"><span class="note__ic">💡</span><div class="note__body"><strong>Combiner.</strong> <code>(age &gt;= 18) et (permis = Vrai)</code> n'est vrai que si LES DEUX le sont. Avec <code>ou</code>, il suffit d'un seul.</div></div>
+
+    <h2 id="imbrication"><span class="num">3</span> Conditions imbriquées &amp; SELON</h2>
+    <p>On peut mettre un SI dans un SI (imbrication). Quand on teste UNE variable contre plusieurs valeurs, <b>SELON</b> est plus clair.</p>
+    <div class="code"><div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">selon.algo</span><button class="code__copy">Copier</button></div>
+      <pre><code data-raw="Selon jour Faire
+    Cas 1 : Ecrire(""Lundi"")
+    Cas 2 : Ecrire(""Mardi"")
+    Cas 6, 7 : Ecrire(""Week-end"")
+    Sinon : Ecrire(""Jour inconnu"")
+FinSelon"></code></pre></div>
+
+    <h2 id="simulateur"><span class="num">4</span> Simulateur : quel chemin est pris ?</h2>
+    <p>Entre une note et regarde le code : seules les lignes du chemin réellement exécuté s'allument.</p>
+    <div data-viz-conditions></div>
+
+    <h2 id="erreurs"><span class="num">5</span> Erreurs fréquentes</h2>
+    <ul>
+      <li>Confondre <code>=</code> (test) et <code>←</code> (affectation) dans la condition.</li>
+      <li>Oublier <code>FinSi</code> / mal imbriquer les blocs.</li>
+      <li>Tester <code>x = Vrai</code> au lieu d'écrire simplement <code>Si x</code> (pour un booléen).</li>
+      <li>Conditions qui se chevauchent (deux cas vrais en même temps).</li>
+    </ul>
+    <div class="note note--exam"><span class="note__ic">🎯</span><div class="note__body"><strong>Astuce examen.</strong> Pour classer (mention, tranche d'âge…), ordonne tes tests du plus restrictif au moins restrictif, ou utilise <code>Sinon Si</code> en cascade pour éviter les chevauchements.</div></div>
+
+    <h2 id="exercices"><span class="num">6</span> Exercices corrigés</h2>
+    <div class="exo"><div class="exo__head"><span class="pill pill--facile">Facile</span><h4>Pair ou impair</h4></div>
+      <p class="exo__statement">Dire si un entier n est pair ou impair.</p>
+      <button class="btn btn--soft btn--sm exo__toggle" data-exo-toggle>▼ Voir la correction</button>
+      <div class="exo__sol"><div class="exo__step"><b>Idée.</b> n est pair si <code>n mod 2 = 0</code>.</div><div class="code"><div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">pair.algo</span><button class="code__copy">Copier</button></div>
+        <pre><code data-raw="Si (n mod 2 = 0) Alors
+    Ecrire(""Pair"")
+Sinon
+    Ecrire(""Impair"")
+FinSi"></code></pre></div></div></div>
+    <div class="exo"><div class="exo__head"><span class="pill pill--moyen">Moyen</span><h4>Le plus grand de trois</h4></div>
+      <p class="exo__statement">Afficher le maximum de trois nombres a, b, c.</p>
+      <button class="btn btn--soft btn--sm exo__toggle" data-exo-toggle>▼ Voir la correction</button>
+      <div class="exo__sol"><div class="code"><div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">max3.algo</span><button class="code__copy">Copier</button></div>
+        <pre><code data-raw="Var max : entier
+Début
+    max <- a
+    Si (b > max) Alors max <- b FinSi
+    Si (c > max) Alors max <- c FinSi
+    Ecrire(""Max = "", max)
+Fin"></code></pre></div></div></div>
+
+    <h2 id="qcm"><span class="num">7</span> QCM</h2>
+    <div class="quiz" data-quiz="conditions" data-time="420"></div>
+
+    <h2 id="resume"><span class="num">8</span> Mini-résumé</h2>
+    <div class="card" style="background:var(--surface-2)"><ul style="margin-top:0">
+      <li>SI teste une condition ; un seul chemin (ALORS ou SINON) est pris.</li>
+      <li>Opérateurs : comparaison + <code>et/ou/non</code>.</li>
+      <li>SELON = tester une variable contre plusieurs valeurs.</li>
+      <li>Attention à <code>=</code> (test) vs <code>←</code> (affectation).</li>
+    </ul></div>
+    <div id="prevnext" style="display:flex;gap:14px;margin-top:34px;flex-wrap:wrap"></div>
+  </article>
+</div>
+<footer class="footer"><div class="footer__inner"><div><b class="grad-text">AlgoTN</b> — Programme Algorithmique & Structures de Données, TI.</div><div>100% hors-ligne · Ta progression reste sur ton appareil.</div></div></footer>
+<button class="iconbtn totop" title="Haut de page">↑</button>
+<div class="search-modal"><div class="search-box"><input type="text" placeholder="Rechercher… (Échap pour fermer)"><div class="search-results"></div></div></div>
+<script>
+window.ALGOTN_QUIZ = [
+  { q:"Une condition vaut :", options:["Un entier","Vrai ou Faux (booléen)","Une chaîne","Une adresse"], answer:1, exp:"Une condition est une expression booléenne." },
+  { q:"Dans SI…ALORS…SINON, combien de blocs s'exécutent ?", options:["Les deux","Un seul (selon la condition)","Aucun","Trois"], answer:1, exp:"Soit ALORS, soit SINON." },
+  { q:"n mod 2 = 0 teste si n est :", options:["Négatif","Pair","Premier","Grand"], answer:1, exp:"Reste nul de la division par 2 = pair." },
+  { q:"(A et B) est vrai si :", options:["Au moins un vrai","Les deux vrais","Aucun","A faux"], answer:1, exp:"'et' exige les deux conditions vraies." },
+  { q:"(A ou B) est vrai si :", options:["Les deux faux","Au moins un vrai","Les deux vrais seulement","Jamais"], answer:1, exp:"'ou' suffit avec une seule vraie." },
+  { q:"non(Vrai) vaut :", options:["Vrai","Faux","0","Erreur"], answer:1, exp:"La négation inverse la valeur." },
+  { q:"SELON CAS sert surtout à :", options:["Faire une boucle","Tester une variable contre plusieurs valeurs","Lire un tableau","Déclarer"], answer:1, exp:"Alternative claire au SI imbriqué multiple." },
+  { q:"Oublier FinSi provoque :", options:["Rien","Une structure mal délimitée / erreur","Un tri","Une boucle infinie"], answer:1, exp:"Les blocs ne sont plus correctement fermés." },
+  { q:"Pour un booléen ok, 'Si ok Alors' équivaut à :", options:["Si ok = Vrai Alors","Si ok ← Vrai","Si ok = Faux","rien"], answer:0, exp:"Tester un booléen directement suffit." },
+  { q:"= dans une condition signifie :", options:["Affectation","Test d'égalité","Incrément","Lecture"], answer:1, exp:"On compare, on n'affecte pas." },
+  { q:"≠ signifie :", options:["Égal","Différent de","Plus grand","Plus petit"], answer:1, exp:"Test de non-égalité." },
+  { q:"Imbriquer des SI, c'est :", options:["Mettre un SI dans un autre","Interdit","Une boucle","Un tableau"], answer:0, exp:"Conditions à l'intérieur de conditions." },
+  { q:"Pour le max de 3 nombres on peut :", options:["Trier obligatoirement","Comparer par étapes avec des SI","Utiliser un pointeur","Faire une file"], answer:1, exp:"max←a puis comparer b et c." },
+  { q:"Deux cas vrais simultanément, c'est :", options:["Souhaitable","Un risque (chevauchement) à éviter","Impossible","Obligatoire"], answer:1, exp:"On veut des cas mutuellement exclusifs." },
+  { q:"Sinon Si sert à :", options:["Enchaîner des conditions exclusives","Faire une boucle","Déclarer","Lire"], answer:0, exp:"Cascade de tests : le premier vrai gagne." }
+];
+</script>
+<script src="../js/data.js"></script><script src="../js/app.js"></script><script src="../js/quiz.js"></script><script src="../js/chapter.js"></script><script src="../js/visualizers/core.js"></script>
+</body></html>

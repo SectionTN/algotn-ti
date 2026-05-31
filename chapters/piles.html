@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Les piles — AlgoTN</title>
+<meta name="description" content="Les piles (LIFO) : empiler (push), dépiler (pop), sommet, applications, avec Stack Visualizer animé.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%2314b8a6'/><text x='50' y='72' font-size='52' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold'>▣</text></svg>">
+<link rel="stylesheet" href="../css/theme.css"><link rel="stylesheet" href="../css/main.css">
+</head>
+<body data-chapter="piles">
+<div class="readbar"></div>
+<header class="topbar"><div class="topbar__inner">
+  <button class="iconbtn menu-toggle" title="Menu">☰</button>
+  <a class="brand" href="../index.html"><span class="brand__logo">A</span><span>AlgoTN <small>Algorithmique · TI</small></span></a>
+  <nav><a href="../index.html">Accueil</a><a href="../index.html#chapitres" class="active">Chapitres</a><a href="../pages/revision.html">Révision</a><a href="../pages/exercices.html">Exercices</a></nav>
+  <span class="topbar__spacer"></span>
+  <button class="iconbtn" data-search-open title="Rechercher (Ctrl+K)">🔍</button>
+  <button class="iconbtn" data-theme-toggle title="Thème"><span data-theme-icon>🌙</span></button>
+</div></header>
+<div class="layout">
+  <aside class="sidebar">
+    <h4>Chapitres</h4><nav id="chap-nav"></nav>
+    <h4>Dans ce chapitre</h4><nav class="toc" id="toc"></nav>
+    <button class="btn btn--soft btn--sm" id="fav-btn" style="margin-top:14px;width:100%">☆ Mettre en favori</button>
+  </aside>
+  <article class="article">
+    <div class="crumbs"><a href="../index.html">Accueil</a> › <a href="../index.html#chapitres">Chapitres</a> › <span>Piles</span></div>
+    <span class="lead-chip" style="margin-top:14px">▣ Les piles</span>
+    <h1 style="margin-top:12px">La pile : dernier arrivé, premier servi</h1>
+    <p class="lead muted">Pense à une pile d'assiettes. Tu poses sur le dessus, tu reprends par le dessus. Tu ne tires jamais celle du fond. C'est exactement une pile (stack) : on accède uniquement au <b>sommet</b>. Principe : <b>LIFO</b> (Last In, First Out).</p>
+
+    <h2 id="principe"><span class="num">1</span> Le principe LIFO</h2>
+    <div class="note note--analogy"><span class="note__ic">🍽️</span><div class="note__body"><strong>Analogie : la pile d'assiettes.</strong> La dernière posée est la première reprise. Pareil pour le bouton « Annuler » (Ctrl+Z) : il défait la <b>dernière</b> action d'abord.</div></div>
+    <p>Deux opérations principales :</p>
+    <ul>
+      <li><b>Empiler (push)</b> : poser un élément sur le sommet.</li>
+      <li><b>Dépiler (pop)</b> : retirer (et récupérer) l'élément du sommet.</li>
+    </ul>
+    <p>Plus quelques utilitaires : <code>sommet()</code> (lire sans retirer), <code>estVide()</code>, <code>taille()</code>.</p>
+
+    <h2 id="visualiseur"><span class="num">2</span> Stack Visualizer</h2>
+    <p>Empile et dépile, observe que ça se passe toujours par le <b>haut</b>. Essaie de dépiler une pile vide : impossible !</p>
+    <div data-viz-stack></div>
+
+    <h2 id="operations"><span class="num">3</span> Les opérations (pseudo-code)</h2>
+    <div class="code"><div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">pile.algo</span><button class="code__copy">Copier</button></div>
+      <pre><code data-raw="Procédure Empiler(var P : Pile ; x : entier)   // push
+Procédure Depiler(var P : Pile ; var x : entier) // pop : récupère le sommet
+Fonction Sommet(P : Pile) : entier              // lire sans retirer
+Fonction EstVide(P : Pile) : booleen"></code></pre></div>
+    <div class="note note--intui"><span class="note__ic">🧠</span><div class="note__body"><strong>La pile est partout.</strong> C'est elle qui gère les appels de fonctions (la fameuse « pile d'appels » de la récursivité !), l'historique du navigateur, l'évaluation des expressions, le retour en arrière…</div></div>
+
+    <h2 id="applications"><span class="num">4</span> Applications classiques</h2>
+    <ul>
+      <li>Vérifier le bon parenthésage d'une expression.</li>
+      <li>Inverser une séquence (on empile tout, puis on dépile).</li>
+      <li>Annuler/Refaire (undo/redo).</li>
+      <li>La pile d'appels qui rend la récursivité possible.</li>
+    </ul>
+
+    <h2 id="erreurs"><span class="num">5</span> Erreurs fréquentes</h2>
+    <ul>
+      <li>Dépiler une pile <b>vide</b> (toujours tester <code>EstVide</code> avant).</li>
+      <li>Confondre pile (LIFO) et file (FIFO).</li>
+      <li>Accéder au « fond » de la pile (impossible : seul le sommet est accessible).</li>
+    </ul>
+    <div class="note note--exam"><span class="note__ic">🎯</span><div class="note__body"><strong>Astuce examen.</strong> « Inverser » ou « dernier d'abord » ⟹ pile. Pour inverser une chaîne : empiler chaque caractère, puis dépiler dans une nouvelle chaîne.</div></div>
+
+    <h2 id="exercices"><span class="num">6</span> Exercice corrigé</h2>
+    <div class="exo"><div class="exo__head"><span class="pill pill--moyen">Moyen</span><h4>Inverser une chaîne avec une pile</h4></div>
+      <p class="exo__statement">Utilise une pile pour inverser l'ordre des caractères d'une chaîne.</p>
+      <button class="btn btn--soft btn--sm exo__toggle" data-exo-toggle>▼ Voir la correction</button>
+      <div class="exo__sol"><div class="exo__step"><b>Idée.</b> On empile tous les caractères (le dernier finit au sommet), puis on dépile : ils ressortent à l'envers.</div><div class="code"><div class="code__bar"><span class="dots"><i></i><i></i><i></i></span><span class="code__title">inverser_pile.algo</span><button class="code__copy">Copier</button></div>
+        <pre><code data-raw="Pour i De 0 À longueur(ch)-1 Faire
+    Empiler(P, ch[i])
+FinPour
+res <- """"
+TantQue (non EstVide(P)) Faire
+    Depiler(P, c)
+    res <- res + c
+FinTantQue"></code></pre></div></div></div>
+
+    <h2 id="qcm"><span class="num">7</span> QCM</h2>
+    <div class="quiz" data-quiz="piles" data-time="360"></div>
+
+    <h2 id="resume"><span class="num">8</span> Mini-résumé</h2>
+    <div class="card" style="background:var(--surface-2)"><ul style="margin-top:0">
+      <li>Pile = LIFO (dernier entré, premier sorti).</li>
+      <li>Accès uniquement au <b>sommet</b>.</li>
+      <li>push (empiler), pop (dépiler), sommet, estVide.</li>
+      <li>Tester EstVide avant de dépiler.</li>
+      <li>Usage : pile d'appels, undo, parenthésage, inversion.</li>
+    </ul></div>
+    <div id="prevnext" style="display:flex;gap:14px;margin-top:34px;flex-wrap:wrap"></div>
+  </article>
+</div>
+<footer class="footer"><div class="footer__inner"><div><b class="grad-text">AlgoTN</b> — Programme Algorithmique & Structures de Données, TI.</div><div>100% hors-ligne · Ta progression reste sur ton appareil.</div></div></footer>
+<button class="iconbtn totop" title="Haut de page">↑</button>
+<div class="search-modal"><div class="search-box"><input type="text" placeholder="Rechercher… (Échap pour fermer)"><div class="search-results"></div></div></div>
+<script>
+window.ALGOTN_QUIZ = [
+  { q:"Une pile suit le principe :", options:["FIFO","LIFO","Aléatoire","Trié"], answer:1, exp:"Last In, First Out : dernier entré, premier sorti." },
+  { q:"Empiler (push) :", options:["Retire le sommet","Ajoute au sommet","Lit le fond","Vide la pile"], answer:1, exp:"On pose sur le dessus." },
+  { q:"Dépiler (pop) :", options:["Ajoute au sommet","Retire l'élément du sommet","Lit le fond","Trie"], answer:1, exp:"On enlève le dernier entré." },
+  { q:"On accède :", options:["Au fond","Au sommet uniquement","À n'importe quel élément","À l'indice i"], answer:1, exp:"Seul le sommet est accessible." },
+  { q:"Avant de dépiler il faut tester :", options:["La taille du tableau","EstVide","Le type","Rien"], answer:1, exp:"Dépiler une pile vide = erreur." },
+  { q:"Ctrl+Z (annuler) utilise :", options:["Une file","Une pile","Un tableau trié","Un arbre"], answer:1, exp:"On défait la dernière action d'abord (LIFO)." },
+  { q:"La récursivité repose sur :", options:["Une file","La pile d'appels","Un tableau","Une liste triée"], answer:1, exp:"Chaque appel est empilé, dépilé au retour." },
+  { q:"Sommet(P) :", options:["Retire le sommet","Lit le sommet sans le retirer","Vide la pile","Empile"], answer:1, exp:"Consultation sans dépiler." },
+  { q:"Pour inverser une séquence :", options:["File","Empiler tout puis dépiler","Trier","Boucle simple"], answer:1, exp:"Le dernier empilé sort en premier." },
+  { q:"Pile vs file :", options:["Identiques","Pile = LIFO, File = FIFO","Pile = FIFO","Aucune différence"], answer:1, exp:"Ordre de sortie opposé." },
+  { q:"Vérifier le parenthésage utilise :", options:["Une pile","Une file","Un tri","Une moyenne"], answer:0, exp:"On empile les ouvrantes, on dépile aux fermantes." },
+  { q:"Si on empile 1,2,3 puis on dépile une fois, on obtient :", options:["1","3","2","rien"], answer:1, exp:"Le sommet est 3 (dernier entré)." },
+  { q:"EstVide renvoie :", options:["Un entier","Un booléen","Le sommet","La taille"], answer:1, exp:"Vrai si la pile n'a aucun élément." },
+  { q:"Une pile peut être implémentée avec :", options:["Un tableau ou une liste chaînée","Uniquement un réel","Uniquement une file","Rien"], answer:0, exp:"Tableau (+ indice sommet) ou liste chaînée." },
+  { q:"Dépiler une pile vide :", options:["Renvoie 0","Provoque une erreur","Empile","Trie"], answer:1, exp:"Aucun élément à retirer." }
+];
+</script>
+<script src="../js/data.js"></script><script src="../js/app.js"></script><script src="../js/quiz.js"></script><script src="../js/chapter.js"></script><script src="../js/visualizers/core.js"></script>
+</body></html>
